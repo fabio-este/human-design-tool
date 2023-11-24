@@ -66,6 +66,7 @@ class UserCrudController extends AbstractCrudController
             ->setPermission('ROLE_SUPER_ADMIN')
             ->setRequired(FALSE);
 
+
         switch ($pageName) {
             case Action::DETAIL:
             case Action::INDEX:

@@ -38,6 +38,11 @@ class Tag
      */
     private $reports;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tags")
+     */
+    private $user;
+
     public function __construct()
     {
         $this->reports = new ArrayCollection();
@@ -88,6 +93,18 @@ class Tag
         if ($this->reports->removeElement($report)) {
             $report->removeTag($this);
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

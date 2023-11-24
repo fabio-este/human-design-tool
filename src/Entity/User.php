@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Query\Expr\Func;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -62,10 +63,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $bodygraphs;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Tag::class, mappedBy="user")
+     */
+    private $tags;
+
 
     public function __construct()
     {
         $this->bodygraphs = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     public function __toString()
@@ -177,7 +184,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-   
+
     /**
      * @return bool
      */
@@ -211,6 +218,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * Check if user has role
+     *
+     * @param string $roles
+     * @return boolean
+     */
+    public function hasRole(string $role): bool
+    {
+        return $this->hasRoles([$role]);
+    }
+
+    /**
+     * Check if user has roles
+     *
+     * @param array $roles
+     * @return boolean
+     */
+    public function hasRoles($roles): bool
+    {
+        foreach ($roles as $role) {
+            if (in_array($role, $this->getRoles())) {
+                return TRUE;
+            }
+        }
+
+        return FALSE;
+    }
+
+    /**
      * @return Collection<int, Bodygraph>
      */
     public function getBodygraphs(): Collection
@@ -234,6 +269,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($bodygraph->getUser() === $this) {
                 $bodygraph->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): self
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags[] = $tag;
+            $tag->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): self
+    {
+        if ($this->tags->removeElement($tag)) {
+            // set the owning side to null (unless already changed)
+            if ($tag->getUser() === $this) {
+                $tag->setUser(null);
             }
         }
 

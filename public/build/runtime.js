@@ -115,8 +115,7 @@
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			"runtime": 0,
-/******/ 			"vendors-node_modules_datatables_media_css_jquery_dataTables_css": 0
+/******/ 			"runtime": 0
 /******/ 		};
 /******/ 		
 /******/ 		// no chunk on demand loading

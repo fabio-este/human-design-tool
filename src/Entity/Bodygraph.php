@@ -355,6 +355,11 @@ class Bodygraph
      */
     private $user;
 
+    /**
+     * @ORM\OneToOne(targetEntity=User::class, cascade={"persist", "remove"})
+     */
+    private $claimedByUser;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -1367,6 +1372,18 @@ class Bodygraph
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getClaimedByUser(): ?User
+    {
+        return $this->claimedByUser;
+    }
+
+    public function setClaimedByUser(?User $claimedByUser): self
+    {
+        $this->claimedByUser = $claimedByUser;
 
         return $this;
     }

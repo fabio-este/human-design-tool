@@ -5,14 +5,17 @@ namespace App\Controller;
 use App\Entity\Bodygraph;
 use App\Entity\CelestialBody;
 use App\Entity\GateActivation;
+use App\Repository\BodygraphRepository;
 use App\Repository\CelestialBodyRepository;
 use App\Repository\ChannelRepository;
 use App\Service\BodygraphService;
 use App\Service\TeamPentaService;
+use App\Service\User\IndexFilterService;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\FilterCollection;
+use Doctrine\ORM\QueryBuilder;
+
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -29,6 +32,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 use Symfony\Component\HttpFoundation\Response;
 
 class BodygraphCrudController extends AbstractCrudController
@@ -39,6 +43,8 @@ class BodygraphCrudController extends AbstractCrudController
 
     protected TeamPentaService $teamPentaService;
 
+    protected IndexFilterService $indexFilterService;
+
     protected CelestialBodyRepository $celestialBodiesRepository;
 
     /**
@@ -47,11 +53,17 @@ class BodygraphCrudController extends AbstractCrudController
      * @param CelestialBodyRepository $celestialBodiesRepository
      * @param TeamPentaService $teamPentaService
      */
-    public function __construct(ChannelRepository $channelRepository, BodygraphService $bodygraphService, CelestialBodyRepository $celestialBodiesRepository, TeamPentaService $teamPentaService)
-    {
+    public function __construct(
+        ChannelRepository $channelRepository,
+        BodygraphService $bodygraphService,
+        CelestialBodyRepository $celestialBodiesRepository,
+        TeamPentaService $teamPentaService,
+        IndexFilterService $indexFilterService
+    ) {
         $this->channelRepository = $channelRepository;
         $this->bodygraphService = $bodygraphService;
         $this->teamPentaService = $teamPentaService;
+        $this->indexFilterService = $indexFilterService;
         $this->celestialBodiesRepository = $celestialBodiesRepository;
     }
 
@@ -69,6 +81,8 @@ class BodygraphCrudController extends AbstractCrudController
      */
     public function configureFields(string $pageName): iterable
     {
+
+        //@todo rewrite to yield and make array $celestialBodies = ['sun', 'earth', ...]
         return [
             TextField::new('name')->setColumns('col-md-3'),
             TextField::new('birthplace')->setColumns('col-md-3'),
@@ -161,8 +175,7 @@ class BodygraphCrudController extends AbstractCrudController
                 ->setColumns('col-md-4'),
             AssociationField::new('tags')->setColumns('col-md-4'),
             AssociationField::new('user')->setPermission('ROLE_ADMIN')->setColumns('col-md-4'),
-
-
+            AssociationField::new('claimedByUser')->setRequired(FALSE)
         ];
     }
 
@@ -243,6 +256,23 @@ class BodygraphCrudController extends AbstractCrudController
         }
 
         return $bodygraph;
+    }
+
+    /**
+     * Overwrite createIndexQueryBuilder to add user constraints
+     *
+     * @param SearchDto $searchDto
+     * @param EntityDto $entityDto
+     * @param FieldCollection $fields
+     * @param FilterCollection $filters
+     * @return QueryBuilder
+     */
+    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
+    {
+        parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+
+        $response = $this->container->get(EntityRepository::class)->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
+        return $this->indexFilterService->addUserConstraint($response);
     }
 
 
