@@ -13,15 +13,17 @@
 $(document).ready(function () {
   var documentRef = documentRef || document;
   var toc = documentRef.getElementById("toc");
+  var report = documentRef.getElementById("reportDisplay");
   var headings = [].slice.call(documentRef.body.querySelectorAll("h1, h2, h3"));
   var tocToggle = documentRef.getElementById("toggle-toc-button");
-  tocToggle.click(function () {
-    toc.classList.add("hide");
-  });
+  var darkModeToggle = documentRef.getElementById("dark-light-mode-button");
   $(tocToggle).on("click", function () {
     $(toc).toggle("slow", function () {
       // Animation complete.
     });
+  });
+  $(darkModeToggle).on("click", function () {
+    $("body").toggleClass("dark-mode");
   });
 
   /**

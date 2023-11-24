@@ -614,18 +614,31 @@ div#toc ul.button-list {
 div#toc ul.button-list li a {
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
 }
+div#toc.dark-mode {
+  background-color: #222;
+  color: #eee;
+}
 
 #print-report-button,
-#toggle-toc-button {
+#toggle-toc-button,
+#dark-light-mode-button {
   right: 0;
   top: 1rem;
   left: calc(100% - 4rem);
   position: fixed;
   width: 3rem;
+  z-index: 999;
+  -webkit-box-shadow: 0 0px 3px 0 rgba(255, 255, 255, 0.75), 0 3px 1rem 0 rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 0px 3px 0 rgba(255, 255, 255, 0.75), 0 3px 1rem 0 rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0px 3px 0 rgba(255, 255, 255, 0.75), 0 3px 1rem 0 rgba(0, 0, 0, 0.75);
 }
 
 #print-report-button {
   top: 5rem;
+}
+
+#dark-light-mode-button {
+  top: 9rem;
 }
 
 .report-text {
@@ -634,9 +647,9 @@ div#toc ul.button-list li a {
   width: 210mm;
   margin: 3rem auto;
   text-align: center;
-  -webkit-box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.5);
-  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 -2px 7px 0 rgba(255, 255, 255, 0.75), 0 3px 5rem 0 rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 -2px 7px 0 rgba(255, 255, 255, 0.75), 0 3px 5rem 0 rgba(0, 0, 0, 0.75);
+  box-shadow: 0 -2px 7px 0 rgba(255, 255, 255, 0.75), 0 3px 5rem 0 rgba(0, 0, 0, 0.75);
   padding: 25mm;
   width: 210mm;
   margin: 3rem auto;
@@ -951,6 +964,37 @@ ul.penta-list li {
     break-inside: avoid;
   }
 }
+.dark-mode,
+.dark-mode #toc {
+  background-color: #222;
+  color: #eee;
+}
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode h5,
+.dark-mode h6,
+.dark-mode p,
+.dark-mode a,
+.dark-mode a.btn,
+.dark-mode #toc h1,
+.dark-mode #toc h2,
+.dark-mode #toc h3,
+.dark-mode #toc h4,
+.dark-mode #toc h5,
+.dark-mode #toc h6,
+.dark-mode #toc p,
+.dark-mode #toc a,
+.dark-mode #toc a.btn {
+  background-color: #222;
+  color: #eee;
+}
+.dark-mode div#toc ul.button-list,
+.dark-mode #toc div#toc ul.button-list {
+  border-bottom: 1px solid #828282;
+}
+
 .mr-1 {
   margin-right: 0.25rem !important;
 }

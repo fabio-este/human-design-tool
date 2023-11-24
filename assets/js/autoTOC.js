@@ -4,16 +4,19 @@
 $(document).ready(function () {
   let documentRef = documentRef || document;
   let toc = documentRef.getElementById("toc");
+  let report = documentRef.getElementById("reportDisplay");
   let headings = [].slice.call(documentRef.body.querySelectorAll("h1, h2, h3"));
   let tocToggle = documentRef.getElementById("toggle-toc-button");
+  let darkModeToggle = documentRef.getElementById("dark-light-mode-button");
 
-  tocToggle.click(function () {
-    toc.classList.add("hide");
-  });
   $(tocToggle).on("click", function () {
     $(toc).toggle("slow", function () {
       // Animation complete.
     });
+  });
+
+  $(darkModeToggle).on("click", function () {
+    $("body").toggleClass("dark-mode");
   });
 
   /**
