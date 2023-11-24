@@ -11,28 +11,17 @@
 
 	{% for channel in bodygraph.channels %}
 		<div class="gate">
-			<h2>Kanal
-				{{ channel.gates[0].id }}
-				-
-				{{ channel.gates[1].id }}
-				-
-				{{ channel.title }}</h2>
+			<h2>Kanal {{ channel.gates[0].id }}
+			-
+			{{ channel.gates[1].id }} - {{ channel.title }}</h2>
 			<p>
 				<b>{{ channel.themes }}</b>
 			</p>
 
 			<p>
 				<i>
-					Vom Tor
-					{{ channel.gateA.id }}
-					({{channel.gateA.title}})
-					                im
-					<b>{{channel.gateA.center[0].title}}</b>
-					ins Tor
-					{{ channel.gateB.id }}
-					({{channel.gateB.title}})
-					                im
-					<b>{{channel.gateB.center[0].title}}</b>
+					Vom Tor {{ channel.gateA.id }} ({{channel.gateA.title}}) im <b>{{channel.gateA.center[0].title}}</b>
+					ins Tor {{ channel.gateB.id }} ({{channel.gateB.title}}) im <b>{{channel.gateB.center[0].title}}</b>
 				</i>
 			</p>
 

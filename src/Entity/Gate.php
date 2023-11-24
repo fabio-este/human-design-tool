@@ -113,8 +113,9 @@ class Gate
         $this->gateActivations = new ArrayCollection();
     }
 
-    public function __toString(){
-        return $this->getId() . ' | ' . $this->getTitle() . ' - ' . $this->getSubtitle();
+    public function __toString()
+    {
+        return $this->getId() . ' | ' . $this->getSubtitle();
     }
 
     public function getId(): ?int
@@ -124,7 +125,7 @@ class Gate
 
     public function setId($id)
     {
-$this->id = $id;
+        $this->id = $id;
     }
 
     public function getTitle(): ?string

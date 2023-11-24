@@ -7,33 +7,52 @@
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var $ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/**
+ * Automatically create a Table Of Contents in the Report View
+ */
 $(document).ready(function () {
   var documentRef = documentRef || document;
   var toc = documentRef.getElementById("toc");
-  var headings = [].slice.call(documentRef.body.querySelectorAll("h1, h2, h3, h4, h5, h6"));
+  var headings = [].slice.call(documentRef.body.querySelectorAll("h1, h2, h3"));
+  var tocToggle = documentRef.getElementById("toggle-toc-button");
+  tocToggle.click(function () {
+    toc.classList.add("hide");
+  });
+  $(tocToggle).on("click", function () {
+    $(toc).toggle("slow", function () {
+      // Animation complete.
+    });
+  });
+
+  /**
+   * Parse Headers
+   */
   var buttonList = [];
   headings.forEach(function (heading, index) {
+    // skip if this header is hidden via the 'data-toc-hide="1"' tag
+    var tocHide = $(heading).data("toc-hide") === 1;
+    if (tocHide) return;
     var anchor = documentRef.createElement("a");
     anchor.setAttribute("name", "toc" + index);
     anchor.setAttribute("id", "toc" + index);
     var link = documentRef.createElement("a");
     link.setAttribute("href", "#toc" + index);
-    link.textContent = heading.textContent;
+    link.textContent = heading.textContent.split(" - ")[0];
     var div = documentRef.createElement("div");
     div.setAttribute("class", heading.tagName.toLowerCase());
+
+    // Create button menu from H1 Tags
     if (heading.tagName.toLowerCase() === "h1") {
       var button = documentRef.createElement("a");
       button.setAttribute("href", "#toc" + index);
       button.classList.add("btn");
       var buttonTextContent = heading.textContent;
       var buttonText = buttonTextContent;
-      console.log(buttonText);
       var number = buttonText.match(/(\d+)/);
       if (number !== null && number[0] !== undefined) {
         button.textContent = "E " + number[0];
         var buttonListItem = documentRef.createElement("li");
         buttonListItem.append(button);
-        console.log(buttonListItem);
         buttonList.push(buttonListItem);
       }
     }
@@ -41,14 +60,13 @@ $(document).ready(function () {
     toc.appendChild(div);
     heading.parentNode.insertBefore(anchor, heading);
   });
+
+  // Build button list
   var buttonListHTML = documentRef.createElement("ul");
   buttonListHTML.classList.add("button-list");
-  console.log(buttonListHTML);
   buttonList.forEach(function (listItem) {
-    console.log(listItem);
     buttonListHTML.append(listItem);
   });
-  console.log(buttonListHTML);
   toc.prepend(buttonListHTML);
 });
 

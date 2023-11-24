@@ -15,9 +15,13 @@
 	{% block main %}
 		{{ encore_entry_script_tags('js/autoTOC') }}
 		<div id="toc"></div>
+				<button id="toggle-toc-button" class="btn btn-primary" alt="Toggle Table of Contents">
+			<i class="fa fa-bars"></i>
+		</button>
 		<button id="print-report-button" class="btn btn-primary" onclick="window.print()" alt="Report ausdrucken">
 			<i class="fa fa-download"></i>
 		</button>
+
 		<div class="report-text" id="reportDisplay">
 			{% include 'bodygraph/_partials/_report.html.twig' with { bodygraph: bodygraph } %}
 		</div>

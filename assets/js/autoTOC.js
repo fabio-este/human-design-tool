@@ -1,41 +1,57 @@
+/**
+ * Automatically create a Table Of Contents in the Report View
+ */
 $(document).ready(function () {
-  var documentRef = documentRef || document;
-  var toc = documentRef.getElementById("toc");
-  var headings = [].slice.call(
-    documentRef.body.querySelectorAll("h1, h2, h3, h4, h5, h6")
-  );
+  let documentRef = documentRef || document;
+  let toc = documentRef.getElementById("toc");
+  let headings = [].slice.call(documentRef.body.querySelectorAll("h1, h2, h3"));
+  let tocToggle = documentRef.getElementById("toggle-toc-button");
 
-  var buttonList = [];
+  tocToggle.click(function () {
+    toc.classList.add("hide");
+  });
+  $(tocToggle).on("click", function () {
+    $(toc).toggle("slow", function () {
+      // Animation complete.
+    });
+  });
+
+  /**
+   * Parse Headers
+   */
+  let buttonList = [];
   headings.forEach(function (heading, index) {
-    var anchor = documentRef.createElement("a");
+    // skip if this header is hidden via the 'data-toc-hide="1"' tag
+    let tocHide = $(heading).data("toc-hide") === 1;
+    if (tocHide) return;
+
+    let anchor = documentRef.createElement("a");
     anchor.setAttribute("name", "toc" + index);
     anchor.setAttribute("id", "toc" + index);
 
-    var link = documentRef.createElement("a");
+    let link = documentRef.createElement("a");
     link.setAttribute("href", "#toc" + index);
-    link.textContent = heading.textContent;
+    link.textContent = heading.textContent.split(" - ")[0];
 
-    var div = documentRef.createElement("div");
+    let div = documentRef.createElement("div");
     div.setAttribute("class", heading.tagName.toLowerCase());
 
+    // Create button menu from H1 Tags
     if (heading.tagName.toLowerCase() === "h1") {
-      var button = documentRef.createElement("a");
+      let button = documentRef.createElement("a");
       button.setAttribute("href", "#toc" + index);
       button.classList.add("btn");
 
-      var buttonTextContent = heading.textContent;
-      var buttonText = buttonTextContent;
-      console.log(buttonText);
+      let buttonTextContent = heading.textContent;
+      let buttonText = buttonTextContent;
 
-      var number = buttonText.match(/(\d+)/);
+      let number = buttonText.match(/(\d+)/);
 
       if (number !== null && number[0] !== undefined) {
         button.textContent = "E " + number[0];
 
-        var buttonListItem = documentRef.createElement("li");
+        let buttonListItem = documentRef.createElement("li");
         buttonListItem.append(button);
-
-        console.log(buttonListItem);
         buttonList.push(buttonListItem);
       }
     }
@@ -45,15 +61,13 @@ $(document).ready(function () {
     heading.parentNode.insertBefore(anchor, heading);
   });
 
-  var buttonListHTML = documentRef.createElement("ul");
+  // Build button list
+  let buttonListHTML = documentRef.createElement("ul");
   buttonListHTML.classList.add("button-list");
-  console.log(buttonListHTML);
+
   buttonList.forEach(function (listItem) {
-    console.log(listItem);
     buttonListHTML.append(listItem);
   });
-
-  console.log(buttonListHTML);
 
   toc.prepend(buttonListHTML);
 });

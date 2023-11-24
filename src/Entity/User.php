@@ -57,10 +57,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $fullname;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Bodygraph::class, mappedBy="user")
+     */
+    private $bodygraphs;
+
 
     public function __construct()
     {
-        
+        $this->bodygraphs = new ArrayCollection();
     }
 
     public function __toString()
@@ -201,6 +206,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setFullname(string $fullname): self
     {
         $this->fullname = $fullname;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Bodygraph>
+     */
+    public function getBodygraphs(): Collection
+    {
+        return $this->bodygraphs;
+    }
+
+    public function addBodygraph(Bodygraph $bodygraph): self
+    {
+        if (!$this->bodygraphs->contains($bodygraph)) {
+            $this->bodygraphs[] = $bodygraph;
+            $bodygraph->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBodygraph(Bodygraph $bodygraph): self
+    {
+        if ($this->bodygraphs->removeElement($bodygraph)) {
+            // set the owning side to null (unless already changed)
+            if ($bodygraph->getUser() === $this) {
+                $bodygraph->setUser(null);
+            }
+        }
 
         return $this;
     }

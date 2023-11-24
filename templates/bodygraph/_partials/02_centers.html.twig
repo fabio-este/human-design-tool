@@ -44,26 +44,17 @@
 		<div class="page-break"></div>
 		<div class="center">
 
-			<h2>{{ center.title }}
-				-
-				{{ center.subtitle }}</h2>
+			<h2>{{ center.title }} - {{ center.subtitle }}</h2>
 
-			<p>
-				Themen:
-				{{ center.themes }}</p>
+			<p> Themen: {{ center.themes }}</p>
 
-			<p>
-				Typ:
-				{{ center.typeAsString }}</p>
+			<p> Typ: {{ center.typeAsString }}</p>
 
-			<p>
-				Biologische Entsprechung:
-				{{ center.biological }}</p>
+			<p> Biologische Entsprechung: {{ center.biological }}</p>
 
 			{{ center.description | raw }}
 
 			{% if centerStatus.status == 'DEFINED' %}
-
 				{% if center.descriptionDefined|length < 20 %}
 					<b>ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!</b>
 				{% endif %}

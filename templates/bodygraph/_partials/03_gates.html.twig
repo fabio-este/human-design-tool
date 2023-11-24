@@ -3,13 +3,8 @@
 	<h1>Ebene 3 - Aktivierte Tore</h1>
 
 	<h4>Allgemein</h4>
-	<p>Jedes Tor steht für eine spezifische Energieform, die sich aus der Bedeutung des Hexagrams aus dem
-																												        I-Ching herleitet</p>
-	<p>Ähnlich wie bei einem Geburtsbild in der Astrologie, ist die Position der Himmelskörper ausschlaggebend
-																												        für die Akivierung einzelner Energien, die im Human Design in Form der Tore dargestellt werden.
-																												        Tore können bewusst oder unbewusst aktiviert sein, was in deinem Bodygraph durch die Farben Rot und
-																												        Schwarz hervorgehoben wird.</p>
-
+	<p>Jedes Tor steht für eine spezifische Energieform, die sich aus der Bedeutung des Hexagrams aus dem I-Ching herleitet</p>
+	<p>Ähnlich wie bei einem Geburtsbild in der Astrologie, ist die Position der Himmelskörper ausschlaggebend für die Akivierung einzelner Energien, die im Human Design in Form der Tore dargestellt werden. Tore können bewusst oder unbewusst aktiviert sein, was in deinem Bodygraph durch die Farben Rot und Schwarz hervorgehoben wird.</p>
 	<h4>DNA und Human Design</h4>
 	<p>Die DNA ist ein Molekül, das Informationen speichert. Interessanterweise entspricht die Gesamtzahl der
 																												        möglichen Gates in der Tabelle des menschlichen Designs der Anzahl der DNA-Codons. Ein Codon ist eine
@@ -61,13 +56,11 @@
 
 					{% set gate = bodygraph.gatesByPosition[arrayKey] %}
 
-
 					{% if mode == 'Design' %}
-						<h2 class="celestial-body-title">
+						<h2 class="celestial-body-title" data-toc-hide="1">
 							{{ celestialBody.gatesTitle }}
 						</h2>
 					{% endif %}
-
 
 					<div class="gate-activation-icons-wrapper">
 						<div class="gate-activation-icons {{ mode|lower }}">
@@ -77,12 +70,8 @@
 						</div>
 					</div>
 
-					<h3 class="gate-title">{{ celestialBody.title }}
-						im Tor
-						{{ gate.id }}
-						-
-						<b>{{ gate.subtitle }}</b>
-						({{mode}})
+					<h3 class="gate-title">
+						{{ celestialBody.title }} im Tor {{ gate.id }} - <b>{{ gate.subtitle }}</b> ({{mode}})
 					</h3>
 
 					<p>
@@ -91,13 +80,7 @@
 					</p>
 
 					<h4 class="gate-title">
-						Tor
-						{{ gate.id }}
-						-
-						{{ gate.title }}<br><small>
-							<i>im
-								{{gate.center[0].title}}</i>
-						</small>
+						Tor {{ gate.id }} - {{ gate.title }}<br><small> <i>im {{gate.center[0].title}}</i> </small>
 					</h4>
 
 					{% if gate.description < 20 %}

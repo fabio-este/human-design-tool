@@ -350,6 +350,11 @@ class Bodygraph
      */
     private $teamPentas;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="bodygraphs")
+     */
+    private $user;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -1350,6 +1355,18 @@ class Bodygraph
         if ($this->teamPentas->removeElement($teamPenta)) {
             $teamPenta->removeBodygraph($this);
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
