@@ -1,0 +1,18 @@
+.accordion-header {
+  .accordion-button {
+    background-color: #ffffff;
+  }
+}
+
+button.accordion-button.container--inside {
+  padding: 1rem 0;
+  padding-right: 2rem;
+}
+
+.accordion-body {
+  background: #fff;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+}

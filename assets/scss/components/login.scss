@@ -1,0 +1,28 @@
+.login-wrapper {
+  div#header-logo {
+    margin-bottom: 3rem;
+  }
+
+  .input-group {
+    .input-group-text {
+      height: 39px;
+      width: 39px;
+      padding: 3px 13px 5px;
+    }
+
+    .input-group-prepend {
+      .input-group-text {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+
+    .input-group-append {
+      .input-group-text {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+    }
+  }
+}
+

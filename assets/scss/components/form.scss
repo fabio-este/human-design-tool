@@ -1,0 +1,36 @@
+.form-control {
+  line-height: 1.75;
+}
+
+.input-group {
+  .input-group-prepend {
+    .input-group-text {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
+  .input-group-append {
+    .input-group-text {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+}
+
+input.tagify-input {
+  max-width: 100%;
+}
+
+.form-switch .form-check-input:checked {
+  border-color: $color-primary;
+}
+
+.form-check-input:checked {
+  background-color: $color-primary;
+}
+
+.page-item.active .page-link {
+  border-color: $color-primary;
+  background-color: $color-primary;
+}

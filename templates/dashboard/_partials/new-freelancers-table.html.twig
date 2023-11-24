@@ -1,0 +1,42 @@
+{% block new_freelancer_table %}
+    <table class="table datagrid">
+        {% block new_freelancer_table_head %}
+            <thead>
+            <tr>
+                <th class="px-2">{{ "freelancer_status"|trans }}</th>
+                <th class="px-2">{{ "Prename"|trans }}</th>
+                <th class="px-2">{{ "Name"|trans }}</th>
+                <th class="px-2">{{ "Spoken Languages"|trans }}</th>
+                <th class="px-2">{{ "City"|trans }}</th>
+                <th class="px-2">{{ "Zip"|trans }}</th>
+            </tr>
+            </thead>
+        {% endblock %}
+        {% block new_freelancer_table_body %}
+            <tbody>
+            {% for freelancer in freelancers %}
+                {% set freelancerEditUrl = ea_url().setController('App\\Controller\\FreelancerCrudController').setAction('detail').setEntityId(freelancer.id).generateUrl() %}
+                {% block new_freelancer_table_loop %}
+                    <tr>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <td><a href="{{ freelancerEditUrl }}">{{ ("FreelancerState" ~ freelancer.status)|trans }}</a></td>
+                            <td><a href="{{ freelancerEditUrl }}">{{ freelancer.prename }}</a></td>
+                            <td><a href="{{ freelancerEditUrl }}">{{ freelancer.name }}</a></td>
+                            <td><a href="{{ freelancerEditUrl }}">{{ freelancer.spokenLanguages|join(', ') }}</a></td>
+                            <td><a href="{{ freelancerEditUrl }}">{{ freelancer.city }}</a></td>
+                            <td><a href="{{ freelancerEditUrl }}">{{ freelancer.zip }}</a></td>
+                        {% else %}
+                            <td>{{ ("FreelancerState" ~ freelancer.status)|trans }}</td>
+                            <td>{{ freelancer.prename }}</td>
+                            <td>{{ freelancer.name }}</td>
+                            <td>{{ freelancer.spokenLanguages|join(', ') }}</td>
+                            <td>{{ freelancer.city }}</td>
+                            <td>{{ freelancer.zip }}</td>
+                        {% endif %}
+                    </tr>
+                {% endblock %}
+            {% endfor %}
+            </tbody>
+        {% endblock %}
+    </table>
+{% endblock %}

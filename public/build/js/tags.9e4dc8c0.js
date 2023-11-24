@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[996],{78248:(e,a,t)=>{var o=t(18634),r=t.n(o),l=document.querySelector('[data-role="tagify"]');if(console.log(document.querySelector('[data-role="tagify"]')),l){var c=l.dataset.autocompleteTags;console.log(c);new(r())(l)}}},e=>{e.O(0,[634],(()=>{return a=78248,e(e.s=a);var a}));e.O()}]);

@@ -1,0 +1,125 @@
+table.datatables {
+  tr.matching {
+    background: transparentize($green, 0.3);
+
+
+  }
+
+  td.match, th.match {
+    max-width: 30px;
+  }
+
+  td.checkbox, th.checkbox {
+    max-width: 30px;
+  }
+}
+
+.datagrid thead th {
+  padding-bottom: 1rem;
+}
+
+.details-row {
+  display: none;
+}
+
+.show-on-details {
+  display: none;
+}
+
+.show--details {
+  .hide-on-details {
+    display: none;
+  }
+
+  .show-on-details {
+    display: inline-block;
+  }
+
+  &.details-row {
+    display: table-row;
+  }
+}
+
+
+.dataTables_wrapper div#freelancer-selection_filter input {
+
+  border: none;
+  border-bottom: 1px solid #aaa;
+  border-radius: 0;
+
+
+  &:focus-visible {
+    outline: $color-primary;
+  }
+}
+
+div#freelancer-selection_wrapper {
+
+  margin-top: 22px;
+  padding-top: 22px;
+
+  th.match {
+    min-width: 50px !important;
+  }
+
+  div#freelancer-selection_filter {
+    margin-bottom: 12px;
+  }
+
+  .dataTables_length select {
+    background-color: transparent;
+    padding: 5px 8px 5px 5px;
+    margin-right: 3px;
+    border: 0 solid #aaa;
+    border-bottom-width: 1px;
+    border-radius: 0;
+  }
+
+  td.distance {
+    text-align: right;
+  }
+
+  table#freelancer-selection {
+    margin-bottom: 12px;
+  }
+
+  .dataTables_paginate {
+    .paginate_button {
+      padding: 0.5rem 0.875rem;
+      border: 0;
+      border-radius: var(--border-radius);
+      font-size: .875rem;
+      line-height: 1.5;
+      text-align: center;
+      transition: all .08s ease-in;
+      vertical-align: middle;
+
+      &:hover {
+        background: $color-secondary;
+        border: none;
+        color: #fff !important;
+        box-shadow: var(--button-hover-shadow);
+      }
+
+      &.current {
+        background: $color-primary;
+        border: none;
+        color: #fff !important;
+        font-weight: bold;
+        box-shadow: none;
+      }
+
+      &.disabled{
+        background: #fff;
+        border: none;
+        color: #aaa!important;
+        box-shadow: none;
+      }
+    }
+  }
+}
+
+
+table.dataTable tbody td, table.dataTable tbody th {
+  padding: 8px 14px;
+}

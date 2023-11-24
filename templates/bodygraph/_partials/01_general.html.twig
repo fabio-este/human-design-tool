@@ -1,0 +1,153 @@
+{% block general %}
+
+	<h1 class="title">
+		Human Design Report
+		<br>
+		<small>{{ bodygraph.name }}</small>
+	</h1>
+
+	<h5 data-toc-title="Allgemeines TTEESTT" data-toc-hide="1">Allgemeines</h5>
+
+	<p>Human Design vereint die 5 alten Weisheitslehren
+		<b>Astronomie</b>,
+		<b>Astrologie</b>,
+		<b>Kabbala</b>,
+		<b>I Ching</b>
+		und die
+		<b>yogische Chakren-Lehre</b>. Zudem beinhaltet es Elemente aus der
+		<b>Genetik</b>,
+		<b>Biochemie</b>
+		und
+		<b>Quantenphysik</b>.
+																																																																																													            Es geht außerdem
+																																																																																													            um das Zusammenspiel zwischen
+		<b>Genetik</b>
+		und
+		<b>kognitiver Prägung</b>
+		bzw.
+		<b>Konditionierung</b>
+		sowohl in der Materie als
+																																																														            auch unter energetischen Aspekten.</p>
+	{% if bodygraphImage %}
+		<div class="image-wrapper">
+			<img src="{{ bodygraphImage }}" class="bodygraph" width="750px"/>
+		</div>
+	{% endif %}
+
+	<div class="page-break"></div>
+
+	<h1>Ebene 1: Aura Typ, Strategie, Authorität, Profil und mehr</h1>
+
+	<h2>Aura Typ:
+		{{ bodygraph.auraType.title }}
+	</h2>
+
+	<p>
+		<i>
+			Dein Aura-Typ beschreibt die grundsätzliche Funktions- und Wirkweise deiner Aura und ist abhängig von deinen aktivierten und nicht aktivierten Zentren.
+		</i>
+	</p>
+
+	{% if bodygraph.auraType.description|length < 20 %}
+		<b>ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!</b>
+	{% endif %}
+
+	<p>
+		{{ bodygraph.auraType.description  | raw }}
+	</p>
+
+	<div class="strategy">
+		<h2>Strategie:
+			{{ bodygraph.auraType.strategy }}
+		</h2>
+
+
+		<p>
+			<i>
+				Deine Strategie verrät dir, wie du gemäß deines Aura-Typs am besten durch das Leben gehst.
+			</i>
+		</p>
+
+		{% if bodygraph.auraType.strategyDescription|length < 20 %}
+			<b>ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!</b>
+		{% endif %}
+
+		<p>
+			{{ bodygraph.auraType.strategyDescription  | raw }}
+		</p>
+	</div>
+
+	<div class="authority">
+		<h2>Authorität:
+			{{ bodygraph.authority.title }}
+		</h2>
+
+		<p>
+			<i>
+				Deine Strategie verrät dir, wie du Entscheidungen am sinnvollsten über deine Körperintelligenmz triffst.
+			</i>
+		</p>
+
+		{% if bodygraph.authority.description|length < 20 %}
+			<b>ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!</b>
+		{% endif %}
+		<p>
+			{{ bodygraph.authority.description  | raw }}
+		</p>
+	</div>
+
+	<div class="signature">
+		<h2>Signatur:
+			{{ bodygraph.auraType.signature }}
+		</h2>
+
+		{% if bodygraph.auraType.signatureDescription|length < 20 %}
+			<b>ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!</b>
+		{% endif %}
+
+		<p>
+			<i>
+				Die Signatur verrät dir, wie du lebst, wenn du deiner Strategie und Authorität langfristig folgst.
+			</i>
+		</p>
+
+		<p>
+			{{ bodygraph.auraType.signatureDescription  | raw }}
+		</p>
+	</div>
+
+	<div class="not-self">
+		<h2>Nicht-Selbst-Thema:
+			{{ bodygraph.auraType.notSelf }}
+		</h2>
+
+		<p>
+			<i>
+				Folgst du deiner Strategie und Authorität nicht, wirst du langfristig aus deiner energetischen Natur und in dein Nicht-Selbst fallen.
+			</i>
+		</p>
+
+		{% if bodygraph.auraType.notSelfDescription|length < 20 %}
+			<b>ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!</b>
+		{% endif %}
+
+		<p>
+			{{ bodygraph.auraType.notSelfDescription  | raw }}
+		</p>
+	</div>
+
+
+	<div class="profile">
+		<h2>Profil:
+			{{ bodygraph.profile.title }}
+		</h2>
+
+		{% if bodygraph.profile.description|length < 20 %}
+			<b>ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!</b>
+		{% endif %}
+
+		<p>
+			{{ bodygraph.profile.description  | raw }}
+		</p>
+	</div>
+{% endblock %}

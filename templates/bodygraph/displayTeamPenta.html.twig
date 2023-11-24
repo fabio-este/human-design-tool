@@ -1,0 +1,166 @@
+{% extends ea.templatePath('layout') %}
+
+{% trans_default_domain "EasyAdminBundle" %}
+
+{% trans_default_domain ea.i18n.translationDomain %}
+{% block content_footer_wrapper '' %}
+
+{% block content_title %}
+	TeamPenta
+{% endblock %}
+
+
+{% block body %}
+	{% block main %}
+		<div class="report-text display" id="reportDisplay">
+
+			<div class="penta-wrapper team-penta">
+
+				<h1>Team Penta Auswertung</h1>
+
+				<ul class="penta-list">
+					{% for bodygraph in teamPenta.bodygraphs %}
+						<li>
+							{{bodygraph.name}}
+						</li>
+					{% endfor %}
+				</ul>
+
+				<div class="hex-grid__list">
+
+					<div class="penta hex-grid__item penta-placeholder"></div>
+					<div class="penta hex-grid__item penta-placeholder"></div>
+
+					<div class="penta hex-grid__item penta-8 {{ (teamPenta.presence > 0) ? 'active' : '' }}">
+						<div class="penta-content">
+							<div class="penta-gate">8</div>
+							<div class="penta-title">Präsenz</div>
+							<div class="penta-counter">{{teamPenta.presence}}</div>
+						</div>
+					</div>
+
+					<div class="penta hex-grid__item penta-placeholder"></div>
+					<div class="penta hex-grid__item penta-placeholder"></div>
+
+
+					<div class="penta hex-grid__item penta-31 {{ (teamPenta.structure > 0) ? 'active' : '' }}">
+						<div class="penta-content">
+
+							<div class="penta-gate">31</div>
+							<div class="penta-title">Struktur</div>
+							<div class="penta-counter">{{teamPenta.structure}}</div>
+						</div>
+					</div>
+
+					<div class="penta hex-grid__item penta-placeholder"></div>
+
+					<div class="penta hex-grid__item penta-1 {{ (teamPenta.execution > 0) ? 'active' : '' }}">
+						<div class="penta-content">
+
+							<div class="penta-gate">1</div>
+							<div class="penta-title">Umsetzung</div>
+							<div class="penta-counter">{{teamPenta.execution}}</div>
+						</div>
+					</div>
+
+					<div class="penta hex-grid__item penta-placeholder"></div>
+
+					<div class="penta hex-grid__item penta-33 {{ (teamPenta.vigilence > 0) ? 'active' : '' }}">
+						<div class="penta-content">
+							<div class="penta-gate">33</div>
+							<div class="penta-title">Umsicht</div>
+							<div class="penta-counter">{{teamPenta.vigilence}}</div>
+						</div>
+					</div>
+
+					<div class="penta hex-grid__item penta-placeholder"></div>
+
+					<div class="penta hex-grid__item penta-7 {{ (teamPenta.planning > 0) ? 'active' : '' }}">
+						<div class="penta-content">
+							<div class="penta-gate">7</div>
+							<div class="penta-title">Planung</div>
+							<div class="penta-counter">{{teamPenta.planning}}</div>
+						</div>
+					</div>
+
+					<div class="penta hex-grid__item penta-2 {{ (teamPenta.focus > 0) ? 'active' : '' }}">
+						<div class="penta-content">
+							<div class="penta-gate">2</div>
+							<div class="penta-title">Fokus</div>
+							<div class="penta-counter">{{teamPenta.focus}}</div>
+						</div>
+					</div>
+
+
+					<div class="penta hex-grid__item penta-13 {{ (teamPenta.analysis > 0) ? 'active' : '' }}">
+						<div class="penta-content">
+							<div class="penta-gate">13</div>
+							<div class="penta-title">Auswertung</div>
+							<div class="penta-counter">{{teamPenta.analysis}}</div>
+
+						</div>
+					</div>
+					<div class="penta hex-grid__item penta-placeholder"></div>
+					<div class="penta hex-grid__item penta-placeholder"></div>
+
+					<div class="penta hex-grid__item penta-placeholder"></div>
+
+
+					<div class="penta hex-grid__item penta-14 {{ (teamPenta.capacity > 0) ? 'active' : '' }}">
+						<div class="penta-content">
+							<div class="penta-gate">14</div>
+							<div class="penta-title">Kapazität</div>
+							<div class="penta-counter">{{teamPenta.capacity}}</div>
+						</div>
+					</div>
+
+					<div class="penta hex-grid__item penta-placeholder"></div>
+					<div class="penta hex-grid__item penta-placeholder"></div>
+					<div class="penta hex-grid__item penta-placeholder"></div>
+					<div class="penta hex-grid__item penta-5 {{ (teamPenta.culture > 0) ? 'active' : '' }}">
+						<div class="penta-content">
+							<div class="penta-gate">5</div>
+							<div class="penta-title">Kultur</div>
+							<div class="penta-counter">{{teamPenta.culture}}</div>
+						</div>
+					</div>
+
+
+					<div class="penta hex-grid__item penta-placeholder"></div>
+
+
+					<div class="penta hex-grid__item penta-29 {{ (teamPenta.commitment > 0) ? 'active' : '' }}">
+						<div class="penta-content">
+							<div class="penta-gate">29</div>
+							<div class="penta-title">Commitment</div>
+							<div class="penta-counter">{{teamPenta.commitment}}</div>
+						</div>
+					</div>
+					<div class="penta hex-grid__item penta-placeholder"></div>
+					<div class="penta hex-grid__item penta-placeholder"></div>
+
+
+					<div class="penta hex-grid__item penta-15 {{ (teamPenta.reliability > 0) ? 'active' : '' }}">
+						<div class="penta-content">
+							<div class="penta-gate">15</div>
+							<div class="penta-title">Verlässlichkeit</div>
+							<div class="penta-counter">{{teamPenta.reliability}}</div>
+						</div>
+					</div>
+
+
+					<div class="penta hex-grid__item penta-placeholder"></div>
+					<div class="penta hex-grid__item penta-46 {{ (teamPenta.coordination > 0) ? 'active' : '' }}">
+						<div class="penta-content">
+							<div class="penta-gate">46</div>
+							<div class="penta-title">Koordination</div>
+							<div class="penta-counter">{{teamPenta.coordination}}</div>
+						</div>
+					</div>
+					<div class="penta hex-grid__item penta-placeholder"></div>
+
+				</div>
+			</div>
+		</div>
+	{% endblock %}
+{% endblock %}

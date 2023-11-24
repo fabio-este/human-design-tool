@@ -1,0 +1,31 @@
+{% block open_projects_table %}
+    <table class="table datagrid">
+        {% block open_projects_table_head %}
+        <thead>
+            <tr>
+                <th class="px-2">{{ "Name"|trans }}</th>
+                <th class="px-2">{{ "Status"|trans }}</th>
+                <th class="px-2">{{ "Language"|trans }}</th>
+                <th class="px-2">{{ "Identifier"|trans }}</th>
+                <th class="px-2">{{ "ProjectManager"|trans }}</th>
+            </tr>
+        </thead>
+        {% endblock %}
+        {% block open_projects_table_body %}
+            <tbody>
+                {% for project in projects %}
+                    {% set projectEditUrl = ea_url().setController('App\\Controller\\ProjectCrudController').setAction('detail').setEntityId(project.id).generateUrl() %}
+                    {% block open_projects_table_loop %}
+                    <tr>
+                        <td><a href="{{ projectEditUrl }}">{{ project.name }}</a></td>
+                        <td><a href="{{ projectEditUrl }}">{{ project.status }}</a></td>
+                        <td><a href="{{ projectEditUrl }}">{{ project.language }}</a></td>
+                        <td><a href="{{ projectEditUrl }}">{{ project.identifier }}</a></td>
+                        <td><a href="{{ projectEditUrl }}">{{ project.projectManagement }}</a></td>
+                    </tr>
+                    {% endblock %}
+                {% endfor %}
+            </tbody>
+        {% endblock %}
+    </table>
+{% endblock %}

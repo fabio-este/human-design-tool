@@ -1,0 +1,77 @@
+@import "abstract/variables";
+@import "abstract/mixins";
+@import "abstract/root-properties";
+
+@import "components/login";
+@import "components/form";
+@import "components/fonts";
+@import "components/button";
+@import "components/header";
+@import "components/tags";
+@import "components/accordion";
+@import "components/datatables";
+@import "components/tooltip";
+@import "components/report";
+@import "components/spacing";
+@import "components/bodygraph";
+
+@import "pages/index";
+
+@import "../../node_modules/datatables/media/css/jquery.dataTables.css";
+
+/**
+body.ea-edit .content-wrapper {
+  max-width: 1200px;
+}
+body:not(.ea-content-width-full) .content-wrapper {
+  max-width: var(--body-max-width);
+}*/
+body:not(.ea.ea-index) .content-wrapper-wrapper {
+  display: flex;
+
+  .right-side-bar {
+    // width: calc(100% - var(--body-max-width));
+    // padding-right: 1rem;
+  }
+}
+
+body.ea.ea-index {
+  .content-wrapper-wrapper {
+    div#content-resizer-handler {
+      display: none;
+    }
+    .right-side-bar {
+      display: none;
+    }
+  }
+
+  &:not(.ea-content-width-full) .content-wrapper {
+    max-width: 100%;
+  }
+}
+body:not(.ea-content-width-full) .content-wrapper {
+  min-width: 70%;
+}
+body.ea-mobile-sidebar-visible .sidebar {
+  background: #fff;
+}
+
+.btn {
+  box-shadow: none;
+}
+
+.content-header-title .title {
+  padding-right: 0;
+}
+
+.distance-display {
+  min-width: 80px;
+}
+
+body#ea-index-Freelancer td.actions {
+  min-width: 95px;
+}
+
+table#freelancer.datagrid {
+  border-bottom: 3px solid var(--content-top-border-color);
+}

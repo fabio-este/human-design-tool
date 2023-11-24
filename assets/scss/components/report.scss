@@ -1,0 +1,418 @@
+@import "_hex-grid.scss";
+
+div#toc {
+  @include box-shadow(0 4px 10px 0 rgba(0, 0, 0, 0.25));
+  background-color: #fff;
+  z-index: 999;
+  padding: 25mm;
+  width: 300px;
+  margin: 1rem;
+  /* margin: 3rem auto; */
+  border-radius: 5px;
+  padding: 1rem;
+  position: fixed;
+  top: 0;
+  left: 1rem;
+  overflow-y: scroll;
+  max-height: 95vh;
+
+  .h1,
+  .h2,
+  .h3,
+  .h4,
+  .h5,
+  .h6 {
+    font-size: 0.875rem;
+    margin-bottom: 0;
+  }
+
+  .h1 {
+    font-weight: bolder;
+  }
+
+  .h2 {
+    padding-left: 0.25rem;
+  }
+  .h3 {
+    padding-left: 0.5rem;
+  }
+  .h4 {
+    padding-left: 0.75rem;
+  }
+  .h5 {
+    padding-left: 1rem;
+  }
+  .h5 {
+    padding-left: 1.25rem;
+  }
+
+  ul.button-list {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    list-style-type: none;
+    justify-content: space-around;
+    position: fixed;
+    top: 1rem;
+    left: 2rem;
+    li {
+      a {
+      }
+    }
+  }
+}
+
+#print-report-button {
+  right: 0;
+  top: 1rem;
+  left: calc(100% - 5rem);
+  position: fixed;
+  width: 3rem;
+}
+
+.report-text {
+  font-family: "Montserrat", sans-serif;
+  padding: 1rem 0;
+  width: 210mm;
+  margin: 3rem auto;
+  text-align: center;
+
+  @include box-shadow(0 4px 10px 0 rgba(0, 0, 0, 0.5));
+  padding: 25mm;
+  width: 210mm;
+  margin: 3rem auto;
+
+  h1 {
+    font-size: 28px;
+    color: #000;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    margin-top: 3rem;
+    scroll-margin-top: 2rem;
+
+    &.title {
+      font-size: 2.5rem;
+      font-weight: 600;
+      text-align: center;
+      margin-top: 0;
+    }
+  }
+  h2 {
+    font-weight: 800;
+    font-size: 26px;
+    color: #000;
+    margin-bottom: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  h2.celestial-body-title {
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+  }
+
+  h3 {
+    font-weight: 900;
+    font-size: 23px;
+    color: #000;
+    margin-bottom: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  h3.gate-title {
+    margin-top: 1.5rem;
+  }
+
+  h4 {
+    font-weight: bold;
+    font-size: 20px;
+    color: $grey-text;
+  }
+
+  h5 {
+    font-weight: bold;
+    font-size: 18px;
+    color: $grey-text;
+  }
+
+  p {
+    font-weight: normal;
+    font-size: 18px;
+    color: $grey-text;
+  }
+  .explanation {
+    font-weight: 600;
+    font-style: italic;
+  }
+  .image-wrapper {
+    padding: 3rem 0;
+    img {
+      margin: auto;
+      display: block;
+    }
+  }
+  .incarnation-cross-gates {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    > p {
+      width: 50%;
+      font-size: 18px;
+      font-weight: 500;
+    }
+  }
+  .subtitle {
+    display: flex;
+    .text {
+      display: inline-flex;
+      align-items: center;
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 0;
+    }
+    .hexagram {
+      margin-right: 1rem;
+      .line {
+        background: #000;
+        height: 2px;
+        width: 30px;
+        margin: 2px 0;
+      }
+      .line.line-female {
+        &:after {
+          content: " ";
+          height: 2px;
+          background: #fff;
+          width: 20%;
+          margin: 0 40%;
+          display: block;
+        }
+      }
+    }
+  }
+  .bodygraph {
+    max-width: 66%;
+    width: 80%;
+  }
+  .page-break {
+    margin: 1rem 0;
+  }
+}
+.gate-activation-icons-wrapper {
+  display: block;
+  text-align: center;
+
+  .gate-activation-icons {
+    color: white;
+    border-radius: 5px;
+    padding: 0.25rem 1rem;
+    font-size: 2.5rem;
+    -webkit-print-color-adjust: exact;
+    line-height: 2.75rem;
+    margin-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    display: inline-block;
+    &.design {
+      background: $red;
+    }
+    &.personality {
+      background: $black;
+    }
+
+    span.unicode-char.celestial-body {
+      margin-top: 0.5rem;
+      margin-right: -0.5rem;
+    }
+    span.unicode-char.gate {
+      font-size: 1.9rem;
+      line-height: 2.5rem;
+    }
+  }
+}
+
+.unicode-char {
+  display: inline-block;
+  line-height: 2rem;
+  margin: 0;
+  padding-right: 0.5rem;
+  padding-left: 0.25rem;
+}
+
+span.unicode-char.celestial-body {
+  font-size: 2rem;
+}
+
+h3.gate-title {
+  font-size: 22px;
+  line-height: 30px;
+  font-weight: bold;
+}
+
+ul.penta-list {
+  list-style-type: none;
+  padding: 0;
+  li {
+    font-weight: bold;
+    font-size: 1rem;
+  }
+}
+
+.penta-wrapper {
+  .penta {
+    background-color: rgba(0, 0, 0, 0.3);
+
+    &.active {
+      background-color: $color-primary;
+    }
+
+    display: inline-block;
+    font-size: initial;
+
+    clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
+
+    &-placeholder {
+      background-color: transparent;
+    }
+
+    .penta-content {
+      height: 100%;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      .penta-gate {
+        font-size: 2rem;
+        line-height: 2rem;
+        margin-top: -1.5rem;
+        font-weight: 800;
+      }
+      .penta-title {
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 3rem;
+        margin-top: -0.5rem;
+      }
+    }
+  }
+
+  &.team-penta {
+    h1 {
+      margin-top: 0;
+    }
+
+    .penta-content .penta-gate {
+      margin-top: 0;
+    }
+  }
+  h2.celestial-body-title {
+    margin-top: 3rem;
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 210mm) {
+  .report-text {
+    width: 100%;
+    padding: 1rem;
+    margin: 0;
+
+    h1.title {
+      font-size: 2rem;
+    }
+
+    h2 {
+      font-size: 20px;
+    }
+
+    h4 {
+      font-size: 20px;
+      color: #000;
+    }
+
+    h3.gate-title {
+      font-size: 18px;
+      line-height: 24px;
+      font-weight: bold;
+    }
+
+    h4.gate-title {
+      font-weight: bold;
+      font-size: 18px;
+      color: #000;
+      margin-top: 2rem;
+    }
+
+    p {
+      font-size: 16px;
+    }
+  }
+}
+
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  #print-report-button,
+  #toc {
+    display: none;
+  }
+
+  .report-text {
+    @include box-shadow(none);
+    margin: 0 auto;
+
+    .page-break {
+      page-break-after: always;
+    }
+    .gate {
+      padding-top: 0.5rem;
+    }
+    .gate-activation-icons {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    h2.celestial-body-title {
+      margin-top: 0;
+      margin-bottom: 2.5rem;
+    }
+
+    .penta {
+      print-color-adjust: exact;
+    }
+  }
+
+  @page {
+    size: auto; /* auto is the initial value */
+    /* this affects the margin in the printer settings */
+    margin: 25mm 25mm;
+  }
+  .gate {
+    break-inside: avoid;
+  }
+  .channel {
+    break-inside: avoid;
+  }
+  .center {
+    break-inside: avoid;
+  }
+  .signature {
+    break-inside: avoid;
+  }
+  .strategy {
+    break-inside: avoid;
+  }
+  .not-self {
+    break-inside: avoid;
+  }
+}

@@ -1,0 +1,77 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{% extends ea.templatePath('layout') %}
+
+{% trans_default_domain "EasyAdminBundle" %}
+
+{% trans_default_domain ea.i18n.translationDomain %}
+{% block content_footer_wrapper '' %}
+
+	{% block content_title %}
+
+Dashboard
+
+{% endblock %}
+
+	{% block main %}
+
+		<div class="row"> <div class="col-md-6">
+			<h3>Aura Typen
+			</h3>
+
+			{% set counterPROJECTOR = 0 %}
+			{% set counterREFLECTOR = 0 %}
+			{% set counterMANIFESTOR = 0 %}
+			{% set counterGENERATOR = 0 %}
+			{% set counterMANIFESTING_GENERATOR = 0 %}
+
+			{% for bodygraph in bodygraphs %}
+				{% if bodygraph.auraType.identifier == 'GENERATOR' %}
+					{% set counterGENERATOR = counterGENERATOR + 1 %}
+				{% endif %}
+
+				{% if bodygraph.auraType.identifier == 'MANIFESTOR' %}
+					{% set counterMANIFESTOR = counterMANIFESTOR + 1 %}
+				{% endif %}
+
+				{% if bodygraph.auraType.identifier == 'MANIFESTING_GENERATOR' %}
+					{% set counterMANIFESTING_GENERATOR = counterMANIFESTING_GENERATOR + 1 %}
+				{% endif %}
+
+				{% if bodygraph.auraType.identifier == 'PROJECTOR' %}
+					{% set counterPROJECTOR = counterPROJECTOR + 1 %}
+				{% endif %}
+
+				{% if bodygraph.auraType.identifier == 'REFLECTOR' %}
+					{% set counterREFLECTOR = counterREFLECTOR + 1 %}
+				{% endif %}
+			{% endfor %}
+
+			<table class="table">
+				<tr>
+					<th>Generator</th>
+					<td>{{counterGENERATOR }}</td>
+				</tr>
+
+				<tr>
+					<th>Manifestor</th>
+					<td>{{counterMANIFESTOR }}</td>
+				</tr>
+				<tr>
+					<th>Manifestierender Generator</th>
+					<td>{{counterMANIFESTING_GENERATOR }}</td>
+				</tr>
+				<tr>
+					<th>Projektor</th>
+					<td>{{counterPROJECTOR }}</td>
+				</tr>
+				<tr>
+					<th>Reflektor</th>
+					<td>{{counterREFLECTOR }}</td>
+				</tr>
+			</table>
+		</div>
+		<div class="col-md-6"></div>
+	</div>
+
+{% endblock %}

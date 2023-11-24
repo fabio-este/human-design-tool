@@ -1,0 +1,112 @@
+{% block gates %}
+
+	<h1>Ebene 3 - Aktivierte Tore</h1>
+
+	<h4>Allgemein</h4>
+	<p>Jedes Tor steht für eine spezifische Energieform, die sich aus der Bedeutung des Hexagrams aus dem
+																												        I-Ching herleitet</p>
+	<p>Ähnlich wie bei einem Geburtsbild in der Astrologie, ist die Position der Himmelskörper ausschlaggebend
+																												        für die Akivierung einzelner Energien, die im Human Design in Form der Tore dargestellt werden.
+																												        Tore können bewusst oder unbewusst aktiviert sein, was in deinem Bodygraph durch die Farben Rot und
+																												        Schwarz hervorgehoben wird.</p>
+
+	<h4>DNA und Human Design</h4>
+	<p>Die DNA ist ein Molekül, das Informationen speichert. Interessanterweise entspricht die Gesamtzahl der
+																												        möglichen Gates in der Tabelle des menschlichen Designs der Anzahl der DNA-Codons. Ein Codon ist eine
+																												        semantische Einheit (eine Einheit, die Bedeutung trägt) des genetischen Codes, die aus drei
+																												        stickstoffhaltigen Basen besteht, die in einer Kette aufeinander folgen. Die Gesamtzahl der Basen
+																												        beträgt 4
+																												        und es gibt 64 mögliche Kombinationen, wie diese 4 Basen durch 3 Teile miteinander verbunden sind. (4
+																												        (Basen
+																												        des vorliegenden Moleküls) x 4 (Basen des anderen Moleküls) x 4 Stücke (Gesamtzahl der Moleküle, die
+																												        sich
+																												        miteinander verbinden können) = 64)</p>
+	<p>Jedes Tor im Human Design speichert in sich selbst bestimmte Informationen des genetischen Codes, nach
+																												        denen
+																												        verschiedene Prozesse im Körper ablaufen. Wir können also sagen, dass Human Design nicht nur die
+																												        notwendigen
+																												        Verhaltensstrategien berechnet, sondern auch Ihr Potenzial auf biochemischer Ebene entschlüsselt.</p>
+
+	<h4>Design Gates - Unterbewusstsein (Rot)</h4>
+	<p>Ein unterbewusstes Tor trägt die Qualitäten Ihres so genannten Designs, das als eine Art energetisches
+																												        Programm angesehen werden kann, das sich durch Ihren Körper manifestiert. Sie sind sich dieser
+																												        Qualitäten
+																												        selbst nicht bewusst, andere können sie jedoch sehr leicht aufgreifen.</p>
+
+
+	<h4>Persönlichkeits-Tore - Bewusst (Schwarz)</h4>
+	<p>Ein bewusstes Tor trägt Qualitäten Ihrer Persönlichkeit, die Sie beobachten und kennen können und die Sie
+																												        zu nutzen wissen. Der Verstand weiß im Grunde über diese Qualitäten Bescheid und ist dafür
+																												        verantwortlich, sie hervorzubringen.</p>
+
+	<h4>Dein Weg zur Erfüllung</h4>
+	<p>Wenn du deine Tore (und Kanäle) verstehst, hast du eine Vielzahl von Hinweisen darauf, welcher Weg am
+																												        besten
+																												        zu dir passt. Es ist nicht so, dass du in anderen Dingen keinen Erfolg haben kannst, sondern es ist eher
+																												        so,
+																												        dass du dazu bestimmt bist, in Bereichen erfolgreich zu sein, die deine Kanäle und Tore repräsentieren,
+																												        weil
+																												        sie deine wahre Natur darstellen.
+	</p>
+
+	<div class="page-break"></div>
+
+	{% set modes =  ['Design', 'Personality']%}
+
+	{% for identifier, celestialBody in celestialBodies %}
+		<div class="celestial-body-gates">
+			{% for mode in modes %}
+				<div class="gate">
+					{% set arrayKey = identifier ~ mode%}
+
+					{% set gate = bodygraph.gatesByPosition[arrayKey] %}
+
+
+					{% if mode == 'Design' %}
+						<h2 class="celestial-body-title">
+							{{ celestialBody.gatesTitle }}
+						</h2>
+					{% endif %}
+
+
+					<div class="gate-activation-icons-wrapper">
+						<div class="gate-activation-icons {{ mode|lower }}">
+							<span class="unicode-char celestial-body {{ celestialBody.title|lower|replace({' ': ''}) }}">{{ celestialBody.unicode }}</span>
+							-
+							<span class="unicode-char gate">{{ gate.unicode|raw }}</span>
+						</div>
+					</div>
+
+					<h3 class="gate-title">{{ celestialBody.title }}
+						im Tor
+						{{ gate.id }}
+						-
+						<b>{{ gate.subtitle }}</b>
+						({{mode}})
+					</h3>
+
+					<p>
+						{{ celestialBody.description|raw }}
+						{{ attribute(celestialBody, 'description' ~ mode)|raw  }}
+					</p>
+
+					<h4 class="gate-title">
+						Tor
+						{{ gate.id }}
+						-
+						{{ gate.title }}<br><small>
+							<i>im
+								{{gate.center[0].title}}</i>
+						</small>
+					</h4>
+
+					{% if gate.description < 20 %}
+						<b>ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!</b>
+					{% endif %}
+
+					<p>{{ gate.description | raw }}</p>
+				</div>
+			{% endfor %}
+		</div>
+	{% endfor %}
+{% endblock %}
