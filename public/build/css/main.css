@@ -506,6 +506,11 @@ input.tagify-input {
   background-color: #f6b236;
 }
 
+.field-association.celestial-body-field.form-group .form-group label,
+.field-association.celestial-body-field.form-group .form-group legend.col-form-label {
+  padding-left: 1rem;
+}
+
 /* montserrat-200 - latin */
 @font-face {
   font-display: swap;

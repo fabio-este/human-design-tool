@@ -11,6 +11,7 @@ use App\Repository\ChannelRepository;
 use App\Service\BodygraphService;
 use App\Service\TeamPentaService;
 use App\Service\User\IndexFilterService;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
@@ -33,6 +34,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
+
 use Symfony\Component\HttpFoundation\Response;
 
 class BodygraphCrudController extends AbstractCrudController
@@ -81,102 +83,44 @@ class BodygraphCrudController extends AbstractCrudController
      */
     public function configureFields(string $pageName): iterable
     {
-
         //@todo rewrite to yield and make array $celestialBodies = ['sun', 'earth', ...]
-        return [
-            TextField::new('name')->setColumns('col-md-3'),
-            TextField::new('birthplace')->setColumns('col-md-3'),
-            DateField::new('birthdate')->setColumns('col-md-3'),
-            TimeField::new('birthtime')->setColumns('col-md-3'),
-            AssociationField::new('sunDesign')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('sunDesignLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('sunPersonality')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('sunPersonalityLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('earthDesign')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('earthDesignLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('earthPersonality')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('earthPersonalityLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('northNodeDesign')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('northNodeDesignLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('northNodePersonality')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('northNodePersonalityLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('southNodeDesign')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('southNodeDesignLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('southNodePersonality')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('southNodePersonalityLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('moonDesign')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('moonDesignLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('moonPersonality')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('moonPersonalityLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('mercuryDesign')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('mercuryDesignLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('mercuryPersonality')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('mercuryPersonalityLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('venusDesign')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('venusDesignLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('venusPersonality')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('venusPersonalityLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('marsDesign')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('marsDesignLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('marsPersonality')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('marsPersonalityLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('jupiterDesign')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('jupiterDesignLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('jupiterPersonality')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('jupiterPersonalityLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('saturnDesign')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('saturnDesignLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('saturnPersonality')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('saturnPersonalityLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('uranusDesign')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('uranusDesignLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('uranusPersonality')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('uranusPersonalityLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('neptuneDesign')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('neptuneDesignLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('neptunePersonality')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('neptunePersonalityLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('plutoDesign')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('plutoDesignLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('plutoPersonality')->setColumns('col-md-4')->hideOnIndex(),
-            ChoiceField::new('plutoPersonalityLine')->setColumns('col-md-2')->hideOnIndex()
-                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]),
-            AssociationField::new('auraType')->setColumns('col-md-4'),
-            AssociationField::new('authority')->setColumns('col-md-4'),
-            AssociationField::new('profile')->setColumns('col-md-4'),
-            ImageField::new('image')
-                ->setBasePath('img/graphs')
-                ->setUploadDir('public/img/graphs')
-                ->setColumns('col-md-4'),
-            AssociationField::new('tags')->setColumns('col-md-4'),
-            AssociationField::new('user')->setPermission('ROLE_ADMIN')->setColumns('col-md-4'),
-            AssociationField::new('claimedByUser')->setRequired(FALSE)
-        ];
+        yield TextField::new('name')->setColumns('col-md-3');
+        yield TextField::new('birthplace')->setColumns('col-md-3');
+        yield DateField::new('birthdate')->setColumns('col-md-3');
+        yield TimeField::new('birthtime')->setColumns('col-md-3');
+
+        $celestialBodies = ['sun', 'earth', 'northNode', 'southNode', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'];
+
+        foreach ($celestialBodies as $celestialBody) {
+            yield AssociationField::new($celestialBody . 'Design')
+                ->addCssClass('celestial-body-field celestial-body-field-' . $celestialBody)
+                ->setColumns('col-md-4')
+                ->hideOnIndex();
+            yield ChoiceField::new($celestialBody . 'DesignLine')
+                ->setColumns('col-md-2')
+                ->hideOnIndex()
+                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]);
+            yield AssociationField::new($celestialBody . 'Personality')
+                ->addCssClass('celestial-body-field celestial-body-field-' . $celestialBody)
+                ->setColumns('col-md-4')
+
+                ->hideOnIndex();
+            yield ChoiceField::new($celestialBody . 'PersonalityLine')
+                ->setColumns('col-md-2')
+                ->hideOnIndex()
+                ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]);
+        }
+
+        yield AssociationField::new('auraType')->setColumns('col-md-4');
+        yield AssociationField::new('authority')->setColumns('col-md-4');
+        yield AssociationField::new('profile')->setColumns('col-md-4');
+        yield ImageField::new('image')
+            ->setBasePath('img/graphs')
+            ->setUploadDir('public/img/graphs')
+            ->setColumns('col-md-4');
+        yield AssociationField::new('tags')->setColumns('col-md-4');
+        yield AssociationField::new('user')->setPermission('ROLE_ADMIN')->setColumns('col-md-4');
+        yield AssociationField::new('claimedByUser')->setRequired(FALSE);
     }
 
     /**
@@ -311,11 +255,9 @@ class BodygraphCrudController extends AbstractCrudController
         $displayReport = Action::new('displayReport', '', 'fa fa-file')
             ->linkToCrudAction('displayReportAction');
 
-
         $displayTeamPenta = Action::new('displayTeamPenta', '', 'fa fa-users')
             ->linkToCrudAction('displayTeamPentaAction')
             ->addCssClass('btn btn-primary');
-
 
         return $actions
             ->add(Crud::PAGE_DETAIL, $displayReport)

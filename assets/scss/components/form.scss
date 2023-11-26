@@ -34,3 +34,10 @@ input.tagify-input {
   border-color: $color-primary;
   background-color: $color-primary;
 }
+
+.field-association.celestial-body-field.form-group {
+  .form-group label,
+  .form-group legend.col-form-label {
+    padding-left: 1rem;
+  }
+}
