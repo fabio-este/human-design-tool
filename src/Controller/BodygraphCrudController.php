@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Bodygraph;
 use App\Entity\CelestialBody;
 use App\Entity\GateActivation;
-use App\Repository\BodygraphRepository;
 use App\Repository\CelestialBodyRepository;
 use App\Repository\ChannelRepository;
 use App\Service\BodygraphService;
@@ -30,9 +30,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TimezoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -60,7 +62,8 @@ class BodygraphCrudController extends AbstractCrudController
         BodygraphService $bodygraphService,
         CelestialBodyRepository $celestialBodiesRepository,
         TeamPentaService $teamPentaService,
-        IndexFilterService $indexFilterService
+        IndexFilterService $indexFilterService,
+
     ) {
         $this->channelRepository = $channelRepository;
         $this->bodygraphService = $bodygraphService;
@@ -85,9 +88,9 @@ class BodygraphCrudController extends AbstractCrudController
     {
         //@todo rewrite to yield and make array $celestialBodies = ['sun', 'earth', ...]
         yield TextField::new('name')->setColumns('col-md-3');
-        yield TextField::new('birthplace')->setColumns('col-md-3');
-        yield DateField::new('birthdate')->setColumns('col-md-3');
-        yield TimeField::new('birthtime')->setColumns('col-md-3');
+        yield DateTimeField::new('birthdatetime')->setColumns('col-md-2');
+        yield TimezoneField::new('timezone')->setColumns('col-md-3');
+        yield TextField::new('birthplace')->setColumns('col-md-2');
 
         $celestialBodies = ['sun', 'earth', 'northNode', 'southNode', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'];
 
@@ -162,7 +165,24 @@ class BodygraphCrudController extends AbstractCrudController
             'teamPenta' => $teamPenta
         ]);
     }
+    /**
+     * @param AdminContext $context
+     * @return Response+
+     */
+    public function calculateDesignAction(AdminContext $context): Response
+    {
+        $bodygraph = $context->getEntity()->getInstance();
 
+        $this->bodygraphService->calculateData($bodygraph);
+
+        $bodygraphImage = $this->imageToBase64($this->getParameter('kernel.project_dir') . '/public/img/graphs/' . $bodygraph->getImage());
+
+        return $this->render('bodygraph/displayReport.html.twig', [
+            'bodygraph' => $bodygraph,
+            'bodygraphImage' => $bodygraphImage,
+            'celestialBodies' => $this->celestialBodiesRepository->getCelestialBodiesByIdentifier()
+        ]);
+    }
 
     /**
      * @param string $path
@@ -226,8 +246,10 @@ class BodygraphCrudController extends AbstractCrudController
      */
     public function updateEntity(EntityManagerInterface $entityManager, $bodygraph): void
     {
+
         // Modify the entity before it's persisted
         if ($bodygraph instanceof Bodygraph) {
+            //  $this->bodygraphService->calculateData($bodygraph);
             $this->bodygraphService->processBodygraph($bodygraph);
         }
         parent::updateEntity($entityManager, $bodygraph);
@@ -241,6 +263,10 @@ class BodygraphCrudController extends AbstractCrudController
     {
         // Modify the entity before it's persisted
         if ($bodygraph instanceof Bodygraph) {
+
+            //$this->bodygraphService->calculateData($bodygraph);
+
+
             $this->bodygraphService->processBodygraph($bodygraph);
         }
         parent::persistEntity($entityManager, $bodygraph);
@@ -259,10 +285,15 @@ class BodygraphCrudController extends AbstractCrudController
             ->linkToCrudAction('displayTeamPentaAction')
             ->addCssClass('btn btn-primary');
 
+        $calculateDesign = Action::new('calculateDesign', '', 'fa fa-calculator')
+            ->linkToCrudAction('calculateDesignAction');
+
+
         return $actions
             ->add(Crud::PAGE_DETAIL, $displayReport)
             ->add(Crud::PAGE_EDIT, $displayReport)
             ->add(Crud::PAGE_INDEX, $displayReport)
+            ->add(Crud::PAGE_EDIT, $calculateDesign)
             ->addBatchAction($displayTeamPenta);
     }
 

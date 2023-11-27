@@ -31,12 +31,12 @@ class Bodygraph
     private $birthplace;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      */
     private $birthdate;
 
     /**
-     * @ORM\Column(type="time")
+     * @ORM\Column(type="time", nullable=true)
      */
     private $birthtime;
 
@@ -104,7 +104,7 @@ class Bodygraph
      * @ORM\ManyToOne(targetEntity=Gate::class)
      */
     private $plutoDesign;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity=Gate::class)
      */
@@ -279,7 +279,7 @@ class Bodygraph
      * @ORM\Column(type="integer")
      */
     private $plutoDesignLine;
-    
+
     /**
      * @ORM\Column(type="integer")
      */
@@ -330,7 +330,7 @@ class Bodygraph
      */
     private $saturnPersonalityLine;
 
-        /**
+    /**
      * @ORM\Column(type="integer")
      */
     private $uranusPersonalityLine;
@@ -360,6 +360,21 @@ class Bodygraph
      */
     private $claimedByUser;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $timezone;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $birthdatetime;
+
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $apiResponse = [];
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -369,7 +384,8 @@ class Bodygraph
         $this->teamPentas = new ArrayCollection();
     }
 
-    public function __toString(){
+    public function __toString()
+    {
         return $this->getId() . ' | ' . $this->getName();
     }
 
@@ -770,10 +786,10 @@ class Bodygraph
     public function getGates(): array
     {
         $gates = $this->getGatesByPosition();
-       
-        $gatesByNumber=[];
-        foreach ($gates as $gate){
-            if($gate instanceof Gate){
+
+        $gatesByNumber = [];
+        foreach ($gates as $gate) {
+            if ($gate instanceof Gate) {
                 $gatesByNumber[$gate->getId()] = $gate;
             }
         }
@@ -788,7 +804,7 @@ class Bodygraph
     {
         $gateCollection = new ArrayCollection();
         $gates = $this->getGatesByPosition();
-        foreach ($gates as $gate){
+        foreach ($gates as $gate) {
             $gateCollection->add($gate);
         }
 
@@ -855,11 +871,12 @@ class Bodygraph
 
         return $this;
     }
-    public function getHasGate($number):bool{
+    public function getHasGate($number): bool
+    {
         $gates = $this->getGates();
 
-        foreach($gates as $gate){
-            if($gate->getId() === $number){
+        foreach ($gates as $gate) {
+            if ($gate->getId() === $number) {
                 return TRUE;
             }
         }
@@ -877,7 +894,7 @@ class Bodygraph
 
         foreach ($allChannels as $channel) {
 
-            if($channel->getGateA()->getCenter()[0] === $center || $channel->getGateB()->getCenter()[0] === $center){
+            if ($channel->getGateA()->getCenter()[0] === $center || $channel->getGateB()->getCenter()[0] === $center) {
                 $centerChannels->add($channel);
             }
         }
@@ -922,9 +939,10 @@ class Bodygraph
     }
 
 
-    public function getCenterStatusByCenter($center){
-        foreach ($this->getCenterStatuses() as $centerStatus){
-            if($centerStatus->getCenter() === $center){
+    public function getCenterStatusByCenter($center)
+    {
+        foreach ($this->getCenterStatuses() as $centerStatus) {
+            if ($centerStatus->getCenter() === $center) {
                 return $centerStatus;
             }
         }
@@ -1179,7 +1197,7 @@ class Bodygraph
         return $this;
     }
 
-    
+
     public function getSunPersonalityLine(): ?int
     {
         return $this->sunPersonalityLine;
@@ -1384,6 +1402,42 @@ class Bodygraph
     public function setClaimedByUser(?User $claimedByUser): self
     {
         $this->claimedByUser = $claimedByUser;
+
+        return $this;
+    }
+
+    public function getTimezone(): ?string
+    {
+        return $this->timezone;
+    }
+
+    public function setTimezone(string $timezone): self
+    {
+        $this->timezone = $timezone;
+
+        return $this;
+    }
+
+    public function getBirthdatetime(): ?\DateTimeInterface
+    {
+        return $this->birthdatetime;
+    }
+
+    public function setBirthdatetime(\DateTimeInterface $birthdatetime): self
+    {
+        $this->birthdatetime = $birthdatetime;
+
+        return $this;
+    }
+
+    public function getApiResponse(): ?array
+    {
+        return $this->apiResponse;
+    }
+
+    public function setApiResponse(?array $apiResponse): self
+    {
+        $this->apiResponse = $apiResponse;
 
         return $this;
     }

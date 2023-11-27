@@ -20,6 +20,11 @@ use App\Repository\CenterRepository;
 use App\Repository\ChannelRepository;
 use App\Repository\IncarnationCrossRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\AstrologyAPI\AstrologyApiClient;
+use DateTime;
+use DateTimeInterface;
+use DateTimeZone;
+use Symfony\Component\Intl\Timezones;
 
 /**
  * Class SendLogService
@@ -54,20 +59,65 @@ class BodygraphService
     protected EntityManagerInterface $entityManager;
 
     /**
+     * @var AstrologyApiClient
+     */
+    protected AstrologyApiClient $astrologyAPI;
+
+    /**
      * @param EntityManagerInterface $entityManager
      * @param ChannelRepository $channelRepository
      * @param CenterRepository $centerRepository
      */
 
-     //protected SwissEphemeris $sweph;
-    public function __construct(EntityManagerInterface $entityManager, BodygraphRepository $bodygraphRepository, ChannelRepository $channelRepository, CenterRepository $centerRepository, IncarnationCrossRepository $incarnationCrossRepository)
-    {
+    //protected SwissEphemeris $sweph;
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        BodygraphRepository $bodygraphRepository,
+        ChannelRepository $channelRepository,
+        CenterRepository $centerRepository,
+        IncarnationCrossRepository $incarnationCrossRepository,
+        AstrologyApiClient $astrologyAPI
+    ) {
         $this->bodygraphRepository = $bodygraphRepository;
         $this->channelRepository = $channelRepository;
         $this->centerRepository = $centerRepository;
         $this->incarnationCrossRepository = $incarnationCrossRepository;
         $this->entityManager = $entityManager;
+        $this->astrologyAPI = $astrologyAPI;
         //$this->sweph = $sweph;
+    }
+
+    public function calculateData(Bodygraph $bodygraph)
+    {
+        $birthtime = $bodygraph->getBirthtime();
+        $birthdate = $bodygraph->getBirthdate();
+        $birthplace = $bodygraph->getBirthplace();
+        $birthdatetime = $bodygraph->getBirthdatetime();
+
+        $day = $birthdatetime->format('d');
+        $month = $birthdatetime->format('m');
+        $year = $birthdatetime->format('Y');
+        $hour = $birthdatetime->format('H');
+        $minute = $birthdatetime->format('i');
+
+        //@todo auto guess location
+        $lat = 50.99294743728378;
+        $lon = 6.924135363116342;
+
+        $timezone = $bodygraph->getTimezone();
+
+
+        $timezoneOffset = (int) $this->ch150918__utc_offset_dst($timezone, $birthdatetime);
+        dump($day, $month, $year, $hour, $minute, $lat, $lon, $timezoneOffset);
+        $apiResponse = $this->astrologyAPI->getWesternHoroscope($day, $month, $year, $hour, $minute, $lat, $lon, $timezoneOffset);
+
+        $apiData = json_decode($apiResponse, TRUE);
+
+        $bodygraph->setApiResponse($apiData);
+
+
+
+        dd($apiData);
     }
 
     /**
@@ -143,12 +193,11 @@ class BodygraphService
             }
 
 
-            if($centerStatusNew){
+            if ($centerStatusNew) {
                 $bodygraph->addCenterStatus($centerStatus);
                 $this->entityManager->getRepository(CenterStatus::class)->add($centerStatus);
-                
             }
-      
+
             $this->entityManager->flush();
         }
     }
@@ -227,7 +276,7 @@ class BodygraphService
             $gates = $channel->getGates();
             foreach ($gates as $gate) {
                 $gateChannel = $gate->getChannels();
-             dump($gateChannel);
+                dump($gateChannel);
             }
 
             if ($channel->getCenter()->getIdentifier() === Center::THROAT) {
@@ -238,4 +287,41 @@ class BodygraphService
         }
     }
 
+    protected function getUTCOffset($timezone, $birthdatetime)
+    {
+        $current   = timezone_open($timezone);
+        $utcTime  = new \DateTime($birthdatetime->format(), new \DateTimeZone('UTC'));
+        $offsetInSecs =  $current->getOffset($utcTime);
+        $hoursAndSec = gmdate('H:i', abs($offsetInSecs));
+        return stripos($offsetInSecs, '-') === false ? "+{$hoursAndSec}" : "-{$hoursAndSec}";
+    }
+
+    protected function    ch150918__utc_offset_dst($time_zone = 'Europe/Berlin', $datetime = 'now')
+    {
+
+        // Set UTC as default time zone.
+        date_default_timezone_set('UTC');
+
+        if ($datetime instanceof DateTimeInterface) {
+            $utc = new DateTime($datetime->format('Y-m-d H:i:s'));
+        } else {
+            $utc = new DateTime();
+        }
+
+
+        // Calculate offset.
+        $current   = timezone_open($time_zone);
+        $offset_s  = timezone_offset_get($current, $utc); // seconds
+        $offset_h  = $offset_s / (60 * 60); // hours
+
+        // Prepend “+” when positive
+        $offset_h  = (string) $offset_h;
+        if (
+            strpos($offset_h, '-') === FALSE
+        ) {
+            $offset_h = '+' . $offset_h; // prepend +
+        }
+
+        return $offset_h;
+    }
 }
