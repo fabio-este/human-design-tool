@@ -31,13 +31,13 @@ class GateCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            NumberField::new('id')->setDisabled(TRUE)->setLabel('Tor-Nummer'),
-            TextField::new('title')->setColumns('col-md-12'),
+            NumberField::new('id')->setDisabled(TRUE)->setLabel('Nummer')->setColumns('col-md-1'),
             TextField::new('unicode')->setColumns('col-md-1'),
-            TextField::new('subtitle')->setValue(' ')->setColumns('col-md-11'),
-            CKEditorField::new('description'),
-            AssociationField::new('opposingGates'),
-            AssociationField::new('center'),
+            TextField::new('title')->setColumns('col-md-5'),
+            TextField::new('subtitle')->setValue(' ')->setColumns('col-md-5'),
+            //  CKEditorField::new('description'),
+            AssociationField::new('opposingGates')->setColumns('col-md-6'),
+            AssociationField::new('center')->setColumns('col-md-6'),
             TextField::new('degree_from')->setColumns('col-md-3')->setPermission('ROLE_ADMIN'),
             AssociationField::new('degreeFromSign')->setColumns('col-md-3')->setPermission('ROLE_ADMIN'),
             TextField::new('degree_to')->setColumns('col-md-3')->setPermission('ROLE_ADMIN'),

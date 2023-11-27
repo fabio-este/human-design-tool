@@ -124,6 +124,16 @@ class Gate
      */
     private $degreeToSign;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $degreeFromAbsolute;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $degreeToAbsolute;
+
     public function __construct()
     {
         $this->channels = new ArrayCollection();
@@ -475,6 +485,30 @@ class Gate
     public function setDegreeToSign(?ZodiacSign $degreeToSign): self
     {
         $this->degreeToSign = $degreeToSign;
+
+        return $this;
+    }
+
+    public function getDegreeFromAbsolute(): ?string
+    {
+        return $this->degreeFromAbsolute;
+    }
+
+    public function setDegreeFromAbsolute(?string $degreeFromAbsolute): self
+    {
+        $this->degreeFromAbsolute = $degreeFromAbsolute;
+
+        return $this;
+    }
+
+    public function getDegreeToAbsolute(): ?string
+    {
+        return $this->degreeToAbsolute;
+    }
+
+    public function setDegreeToAbsolute(string $degreeToAbsolute): self
+    {
+        $this->degreeToAbsolute = $degreeToAbsolute;
 
         return $this;
     }
