@@ -19,11 +19,13 @@ use App\Repository\BodygraphRepository;
 use App\Repository\CenterRepository;
 use App\Repository\ChannelRepository;
 use App\Repository\IncarnationCrossRepository;
+use App\Repository\CelestialBodyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\AstrologyAPI\AstrologyApiClient;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
+use phpDocumentor\Reflection\PseudoTypes\LowercaseString;
 use Symfony\Component\Intl\Timezones;
 
 /**
@@ -53,6 +55,12 @@ class BodygraphService
      */
     protected IncarnationCrossRepository $incarnationCrossRepository;
 
+
+    /**
+     * @var CelestialBodyRepository
+     */
+    protected CelestialBodyRepository $celestialBodyRepository;
+
     /**
      * @var EntityManagerInterface
      */
@@ -76,15 +84,172 @@ class BodygraphService
         ChannelRepository $channelRepository,
         CenterRepository $centerRepository,
         IncarnationCrossRepository $incarnationCrossRepository,
+        CelestialBodyRepository $celestialBodyRepository,
         AstrologyApiClient $astrologyAPI
     ) {
         $this->bodygraphRepository = $bodygraphRepository;
         $this->channelRepository = $channelRepository;
         $this->centerRepository = $centerRepository;
         $this->incarnationCrossRepository = $incarnationCrossRepository;
+        $this->celestialBodyRepository = $celestialBodyRepository;
         $this->entityManager = $entityManager;
         $this->astrologyAPI = $astrologyAPI;
         //$this->sweph = $sweph;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Bodygraph $bodygraph
+     * @return void
+     */
+    public function getBodygraphAsCSV(Bodygraph $bodygraph)
+    {
+        $csv = [];
+
+        // General
+        $csv['name']  = $bodygraph->getName();
+        $csv['birthdatetime']  = $bodygraph->getBirthdatetime()->format('d.m.Y H:i');
+        $csv['birtplace']  = $bodygraph->getBirthplace();
+        $csv['copyright']  = $bodygraph->getBirthplace();
+
+        // Aura Type
+        $csv['aura_type_title']  = $bodygraph->getAuraType()->getTitle();
+        $csv['aura_type_description']  = $bodygraph->getAuraType()->getDescription();
+        $csv['aura_type_percentage']  = 'XX%'; // @todo: Aura Type percentage field
+        $csv['aura_type_strategy']  =        $bodygraph->getAuraType()->getStrategy();
+        $csv['aura_type_strategy_description']  =        $bodygraph->getAuraType()->getStrategyDescription();
+        $csv['aura_type_off_self'] = $bodygraph->getAuraType()->getNotSelf();
+        $csv['aura_type_off_self_description'] = $bodygraph->getAuraType()->getNotSelfDescription();
+
+        // Authority
+        $csv['authority_title']  = $bodygraph->getAuthority()->getTitle();
+        $csv['authority_description']  = $bodygraph->getAuthority()->getDescription();
+
+        // Profile
+        $csv['profile_title']  = $bodygraph->getProfile()->getTitle();
+        $csv['profile']  = $bodygraph->getProfile()->getPersonalityLine() . ' / ' . $bodygraph->getProfile()->getDesignLine();
+        $csv['profile_description']  = $bodygraph->getProfile()->getDescription();
+
+        // Centers
+        $centersActivations = $bodygraph->getCenterStatuses();
+
+        foreach ($centersActivations as $centersActivation) {
+            $activation = $centersActivation->getStatus();
+            $center = $centersActivation->getCenter();
+            $type = $center->getIdentifier();
+            $key = 'center_' . strtolower($type);
+
+            $csv[$key . '_title']  = $center->getTitle();
+            $csv[$key . '_subtitle']  = $center->getSubtitle();
+            $csv[$key . '_themes'] = $center->getThemes();
+            $csv[$key . '_biological'] = $center->getBiological();
+            $csv[$key . '_status']  = $activation;
+            $csv[$key . '_description'] = $center->getDescription();
+
+            switch ($activation) {
+                case CenterStatus::DEFINED:
+                    $csv[$key . '_description_definition_specific'] = $center->getDescriptionDefined();
+                    break;
+
+                case CenterStatus::UNDEFINED:
+                    $csv[$key . '_description_definition_specific'] = $center->getDescriptionUndefined();
+                    break;
+
+                case CenterStatus::OPEN:
+                    $csv[$key . '_description_definition_specific'] = $center->getDescriptionOpen();
+                    break;
+            }
+
+            $csv[$key . '_off_self'] = $center->getNotSelf();
+        }
+
+        // Gates
+        $gates = $bodygraph->getGatesByPosition();
+
+        foreach ($gates as $position => $gate) {
+            $key = 'gate_' .
+                strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $position));
+
+            $csv[$key . '_number'] = $gate->getId();
+            $csv[$key . '_title'] = $gate->getTitle();
+            $csv[$key . '_subtitle'] = $gate->getSubtitle();
+            $csv[$key . '_unicode'] = $gate->getUnicode();
+            $csv[$key . '_description'] = $gate->getDescription();
+
+            $harmonicGates = [];
+            $opposingGates = $gate->getOpposingGates();
+
+            foreach ($opposingGates as $gate) {
+                $harmonicGates[] = $gate->getId();
+            }
+
+            $csv[$key . '_harmonic_gates'] = implode(',', $harmonicGates);
+        }
+
+        //CelestialBodies
+        $celestialBodies = $this->celestialBodyRepository->findAll();
+
+        foreach ($celestialBodies as $celestialBody) {
+            $key = 'celestial_body_' . $celestialBody->getIdentifier();
+
+            $csv[$key . '_title'] = $celestialBody->getTitle();
+            $csv[$key . '_subtitle'] = $celestialBody->getSubtitle();
+            $csv[$key . '_unicode'] = $celestialBody->getUnicode();
+            $csv[$key . '_description'] = $celestialBody->getDescription();
+            $csv[$key . '_title_design'] = $celestialBody->getTitleDesign();
+            $csv[$key . '_title_personality'] = $celestialBody->getTitlePersonality();
+            $csv[$key . '_description_design'] = $celestialBody->getDescriptionDesign();
+            $csv[$key . '_description_personality'] = $celestialBody->getDescriptionPersonality();
+        }
+
+
+        // Channels
+        $channels = $bodygraph->getChannels();
+
+        foreach ($channels as $channel) {
+
+            $key = 'channel_' . $channel->getGateA()->getId() . '-' . $channel->getGateB()->getId();
+
+
+            $csv[$key . '_title'] = $channel->getTitle();
+            $csv[$key . '_subtitle'] = $channel->getSubtitle();
+            $csv[$key . '_themes'] = $channel->getThemes();
+            $csv[$key . '_description'] = $channel->getDescription();
+            $csv[$key . '_subtitle'] = $channel->getSubtitle();
+
+            $propertiesArray = [];
+            $properties = $channel->getProperties();
+            foreach ($properties as $property) {
+                $propertiesArray[] = $property->getTitle();
+            }
+
+            $propertiesString = implode(', ', $propertiesArray);
+            $csv[$key . '_properties'] = $propertiesString;
+        }
+
+        $csvHeader = [];
+        $csvFields = [];
+        foreach ($csv as $header => $field) {
+            $csvHeader[] = $header;
+            $csvFields[] = $field;
+        }
+
+
+        dump($csvHeader);
+        dump($csvFields);
+
+        // Write to memory (unless buffer exceeds 2mb when it will write to /tmp)
+        $fp = fopen('php://temp', 'w+');
+
+        fputcsv($fp, $csvHeader);
+        fputcsv($fp, $csvFields);
+
+        rewind($fp); // Set the pointer back to the start
+        $csv_contents = stream_get_contents($fp); // Fetch the contents of our CSV
+        fclose($fp); // Close our pointer and free up memory and /tmp space
+        // Handle/Output your final sanitised CSV contents
+        return $csv_contents;
     }
 
     public function calculateData(Bodygraph $bodygraph)

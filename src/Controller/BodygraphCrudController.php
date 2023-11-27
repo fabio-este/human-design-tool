@@ -106,7 +106,6 @@ class BodygraphCrudController extends AbstractCrudController
             yield AssociationField::new($celestialBody . 'Personality')
                 ->addCssClass('celestial-body-field celestial-body-field-' . $celestialBody)
                 ->setColumns('col-md-4')
-
                 ->hideOnIndex();
             yield ChoiceField::new($celestialBody . 'PersonalityLine')
                 ->setColumns('col-md-2')
@@ -183,6 +182,25 @@ class BodygraphCrudController extends AbstractCrudController
             'celestialBodies' => $this->celestialBodiesRepository->getCelestialBodiesByIdentifier()
         ]);
     }
+
+    /**
+     * @param AdminContext $context
+     * @return Response+
+     */
+    public function csvExportAction(AdminContext $context): Response
+    {
+        $bodygraph = $context->getEntity()->getInstance();
+        $csvFilename = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $bodygraph->getName()));
+
+        $content = $this->bodygraphService->getBodygraphAsCSV($bodygraph);
+
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="report-data_' . $csvFilename . '.csv"');
+
+        return $response;
+    }
+
 
     /**
      * @param string $path
@@ -288,12 +306,18 @@ class BodygraphCrudController extends AbstractCrudController
         $calculateDesign = Action::new('calculateDesign', '', 'fa fa-calculator')
             ->linkToCrudAction('calculateDesignAction');
 
+        $csvExportAction = Action::new('csvExport', '', 'fa fa-file-csv')
+            ->linkToCrudAction('csvExportAction');
+
 
         return $actions
             ->add(Crud::PAGE_DETAIL, $displayReport)
             ->add(Crud::PAGE_EDIT, $displayReport)
             ->add(Crud::PAGE_INDEX, $displayReport)
             ->add(Crud::PAGE_EDIT, $calculateDesign)
+
+            ->add(Crud::PAGE_INDEX, $csvExportAction)
+            ->add(Crud::PAGE_EDIT, $csvExportAction)
             ->addBatchAction($displayTeamPenta);
     }
 
