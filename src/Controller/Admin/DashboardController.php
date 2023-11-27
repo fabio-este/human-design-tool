@@ -17,6 +17,7 @@ use App\Entity\CelestialBody;
 use App\Entity\ChannelProperties;
 use App\Entity\Tag;
 use App\Entity\User;
+use App\Entity\ZodiacSign;
 use App\Repository\BodygraphRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
@@ -85,6 +86,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Bodygraphs', 'fa fa-user', Bodygraph::class)
             ->setPermission('ROLE_USER');
         yield MenuItem::section('Textbausteine');
+        yield MenuItem::linkToCrud('Zodiac Signs', 'fa fa-file-text-o', ZodiacSign::class)
+            ->setPermission('ROLE_ADMIN');
         yield MenuItem::linkToCrud('Himmelskörper',  'fa fa-file-text-o', CelestialBody::class)
             ->setPermission('ROLE_ADMIN');
         yield MenuItem::linkToCrud('Aura Typen', 'fa fa-file-text-o', AuraType::class)

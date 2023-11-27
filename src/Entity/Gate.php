@@ -104,6 +104,26 @@ class Gate
      */
     private $gateActivations;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $degree_from;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $degree_to;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=ZodiacSign::class, inversedBy="gatesFrom")
+     */
+    private $degreeFromSign;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=ZodiacSign::class, inversedBy="gatesTo")
+     */
+    private $degreeToSign;
+
     public function __construct()
     {
         $this->channels = new ArrayCollection();
@@ -407,6 +427,54 @@ class Gate
                 $gateActivation->setGate(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDegreeFrom(): ?string
+    {
+        return $this->degree_from;
+    }
+
+    public function setDegreeFrom(?string $degree_from): self
+    {
+        $this->degree_from = $degree_from;
+
+        return $this;
+    }
+
+    public function getDegreeTo(): ?string
+    {
+        return $this->degree_to;
+    }
+
+    public function setDegreeTo(?string $degree_to): self
+    {
+        $this->degree_to = $degree_to;
+
+        return $this;
+    }
+
+    public function getDegreeFromSign(): ?ZodiacSign
+    {
+        return $this->degreeFromSign;
+    }
+
+    public function setDegreeFromSign(?ZodiacSign $degreeFromSign): self
+    {
+        $this->degreeFromSign = $degreeFromSign;
+
+        return $this;
+    }
+
+    public function getDegreeToSign(): ?ZodiacSign
+    {
+        return $this->degreeToSign;
+    }
+
+    public function setDegreeToSign(?ZodiacSign $degreeToSign): self
+    {
+        $this->degreeToSign = $degreeToSign;
 
         return $this;
     }

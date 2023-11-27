@@ -38,12 +38,16 @@ class GateCrudController extends AbstractCrudController
             CKEditorField::new('description'),
             AssociationField::new('opposingGates'),
             AssociationField::new('center'),
-            BooleanField::new('line6')->setLabel('Linie 6')->hideOnIndex(),
-            BooleanField::new('line5')->setLabel('Linie 5')->hideOnIndex(),
-            BooleanField::new('line4')->setLabel('Linie 4')->hideOnIndex(),
-            BooleanField::new('line3')->setLabel('Linie 3')->hideOnIndex(),
-            BooleanField::new('line2')->setLabel('Linie 2')->hideOnIndex(),
-            BooleanField::new('line1')->setLabel('Linie 1')->hideOnIndex(),
+            TextField::new('degree_from')->setColumns('col-md-3')->setPermission('ROLE_ADMIN'),
+            AssociationField::new('degreeFromSign')->setColumns('col-md-3')->setPermission('ROLE_ADMIN'),
+            TextField::new('degree_to')->setColumns('col-md-3')->setPermission('ROLE_ADMIN'),
+            AssociationField::new('degreeToSign')->setColumns('col-md-3')->setPermission('ROLE_ADMIN'),
+            BooleanField::new('line6')->setLabel('Linie 6')->hideOnIndex()->setPermission('ROLE_ADMIN'),
+            BooleanField::new('line5')->setLabel('Linie 5')->hideOnIndex()->setPermission('ROLE_ADMIN'),
+            BooleanField::new('line4')->setLabel('Linie 4')->hideOnIndex()->setPermission('ROLE_ADMIN'),
+            BooleanField::new('line3')->setLabel('Linie 3')->hideOnIndex()->setPermission('ROLE_ADMIN'),
+            BooleanField::new('line2')->setLabel('Linie 2')->hideOnIndex()->setPermission('ROLE_ADMIN'),
+            BooleanField::new('line1')->setLabel('Linie 1')->hideOnIndex()->setPermission('ROLE_ADMIN'),
 
         ];
     }
@@ -52,7 +56,8 @@ class GateCrudController extends AbstractCrudController
      * @param Crud $crud
      * @return Crud
      */
-    public function configureCrud(Crud $crud): Crud    {
+    public function configureCrud(Crud $crud): Crud
+    {
         return $crud
             ->addFormTheme('@FOSCKEditor/Form/ckeditor_widget.html.twig')
             ->setPaginatorPageSize(64)
@@ -70,5 +75,4 @@ class GateCrudController extends AbstractCrudController
             ->remove(Crud::PAGE_INDEX, Action::DELETE)
             ->remove(Crud::PAGE_INDEX, Action::NEW);
     }
-
 }
