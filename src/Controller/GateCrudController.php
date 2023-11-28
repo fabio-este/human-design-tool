@@ -42,6 +42,8 @@ class GateCrudController extends AbstractCrudController
             AssociationField::new('degreeFromSign')->setColumns('col-md-3')->setPermission('ROLE_ADMIN'),
             TextField::new('degree_to')->setColumns('col-md-3')->setPermission('ROLE_ADMIN'),
             AssociationField::new('degreeToSign')->setColumns('col-md-3')->setPermission('ROLE_ADMIN'),
+            TextField::new('degreeFromAbsolute')->setColumns('col-md-3')->setPermission('ROLE_ADMIN'),
+            TextField::new('degreeToAbsolute')->setColumns('col-md-3')->setPermission('ROLE_ADMIN'),
             BooleanField::new('line6')->setLabel('Linie 6')->hideOnIndex()->setPermission('ROLE_ADMIN'),
             BooleanField::new('line5')->setLabel('Linie 5')->hideOnIndex()->setPermission('ROLE_ADMIN'),
             BooleanField::new('line4')->setLabel('Linie 4')->hideOnIndex()->setPermission('ROLE_ADMIN'),
