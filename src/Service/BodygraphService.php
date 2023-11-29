@@ -26,6 +26,7 @@ use DateInterval;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
+use Geocoder\Model\Coordinates;
 use Symfony\Component\Intl\Timezones;
 
 /**
@@ -71,6 +72,11 @@ class BodygraphService
     protected AstrologyApiClient $astrologyAPI;
 
     /**
+     * @var GeoCodingService
+     */
+    protected GeoCodingService $geocoder;
+
+    /**
      * @param EntityManagerInterface $entityManager
      * @param ChannelRepository $channelRepository
      * @param CenterRepository $centerRepository
@@ -84,7 +90,8 @@ class BodygraphService
         ChannelRepository $channelRepository,
         CenterRepository $centerRepository,
         IncarnationCrossRepository $incarnationCrossRepository,
-        AstrologyApiClient $astrologyAPI
+        AstrologyApiClient $astrologyAPI,
+        GeoCodingService $geocoder
     ) {
         $this->bodygraphRepository = $bodygraphRepository;
         $this->channelRepository = $channelRepository;
@@ -93,9 +100,17 @@ class BodygraphService
         $this->incarnationCrossRepository = $incarnationCrossRepository;
         $this->entityManager = $entityManager;
         $this->astrologyAPI = $astrologyAPI;
+        $this->geocoder = $geocoder;
         //$this->sweph = $sweph;
     }
 
+
+    /**
+     * @todo: CLEAN THIS MESS UP!
+     *
+     * @param Bodygraph $bodygraph
+     * @return void
+     */
     public function calculateData(Bodygraph $bodygraph)
     {
         $birthtime = $bodygraph->getBirthtime();
@@ -109,9 +124,15 @@ class BodygraphService
         $hour = $birthdatetime->format('H');
         $minute = $birthdatetime->format('i');
 
-        //@todo auto guess location
-        $lat = 50.99294743728378;
-        $lon = 6.924135363116342;
+        $coordinates =   $this->geocoder->geocode($birthplace);
+
+        if (!$coordinates instanceof Coordinates) {
+            ///@todo: make this a proper error message
+            dd('NO COORDINATES FOUND!!!');
+        }
+
+        $lat = $coordinates->getLatitude();
+        $lon = $coordinates->getLongitude();
 
         $timezone = $bodygraph->getTimezone();
 
@@ -127,17 +148,9 @@ class BodygraphService
             dd('API ERROR!!!', $personalityApiData);
         }
 
-        //   $this->calculateAndSetPersonalityGatesAndLines($bodygraph, $personalityApiData, 'Personality');
-
-
+        $this->calculateAndSetPersonalityGatesAndLines($bodygraph, $personalityApiData, 'Personality');
 
         $sundegreeP = $personalityApiData['planets'][0]['full_degree'];
-
-
-
-
-
-
 
         $designDatetime = clone $bodygraph->getBirthdatetime();
 
@@ -167,7 +180,7 @@ class BodygraphService
         $this->calculateAndSetDesignGatesAndLines($bodygraph, $designApiData);
         dump($bodygraph);
 
-        dd($personalityApiData);
+        dump($personalityApiData);
     }
 
     /**
@@ -308,6 +321,7 @@ class BodygraphService
 
         $bodygraph->setPersonalityAPIResponse($apiData);
     }
+
     /**
      * Undocumented function
      *

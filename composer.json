@@ -26,6 +26,8 @@
     "dompdf/dompdf": "^2.0",
     "easycorp/easyadmin-bundle": "^3.5",
     "friendsofsymfony/ckeditor-bundle": "^2.4",
+    "geocoder-php/cache-provider": "*",
+    "geocoder-php/google-maps-provider": "^4.7",
     "kunjara/swetest": "^1.0",
     "maxh/php-nominatim": "^2.3",
     "phpdocumentor/reflection-docblock": "^5.3",
@@ -64,7 +66,8 @@
     "symfony/yaml": "5.4.*",
     "twig/extra-bundle": "^2.12|^3.0",
     "twig/intl-extra": "^3.4",
-    "twig/twig": "^2.12|^3.0"
+    "twig/twig": "^2.12|^3.0",
+    "willdurand/geocoder-bundle": "^5.20"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.5",

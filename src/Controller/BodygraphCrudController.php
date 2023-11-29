@@ -29,6 +29,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CountryField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
@@ -38,6 +39,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TimezoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Node\BodyNode;
 
 class BodygraphCrudController extends AbstractCrudController
 {
@@ -91,6 +93,7 @@ class BodygraphCrudController extends AbstractCrudController
         yield DateTimeField::new('birthdatetime')->setColumns('col-md-2');
         yield TimezoneField::new('timezone')->setColumns('col-md-3');
         yield TextField::new('birthplace')->setColumns('col-md-2');
+        yield CountryField::new('birthCountry')->setColumns('col-md-2');
 
         $celestialBodies = ['sun', 'earth', 'northNode', 'southNode', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'];
 
@@ -98,29 +101,32 @@ class BodygraphCrudController extends AbstractCrudController
             yield AssociationField::new($celestialBody . 'Design')
                 ->addCssClass('celestial-body-field celestial-body-field-' . $celestialBody)
                 ->setColumns('col-md-4')
-                ->hideOnIndex();
+                ->hideOnIndex()
+                ->hideWhenCreating();
             yield ChoiceField::new($celestialBody . 'DesignLine')
                 ->setColumns('col-md-2')
                 ->hideOnIndex()
+                ->hideWhenCreating()
                 ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]);
             yield AssociationField::new($celestialBody . 'Personality')
                 ->addCssClass('celestial-body-field celestial-body-field-' . $celestialBody)
                 ->setColumns('col-md-4')
-
+                ->hideWhenCreating()
                 ->hideOnIndex();
             yield ChoiceField::new($celestialBody . 'PersonalityLine')
                 ->setColumns('col-md-2')
                 ->hideOnIndex()
+                ->hideWhenCreating()
                 ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]);
         }
 
-        yield AssociationField::new('auraType')->setColumns('col-md-4');
-        yield AssociationField::new('authority')->setColumns('col-md-4');
-        yield AssociationField::new('profile')->setColumns('col-md-4');
+        yield AssociationField::new('auraType')->setColumns('col-md-4')->hideWhenCreating();
+        yield AssociationField::new('authority')->setColumns('col-md-4')->hideWhenCreating();
+        yield AssociationField::new('profile')->setColumns('col-md-4')->hideWhenCreating();
         yield ImageField::new('image')
             ->setBasePath('img/graphs')
             ->setUploadDir('public/img/graphs')
-            ->setColumns('col-md-4');
+            ->setColumns('col-md-4')->hideWhenCreating();
         yield AssociationField::new('tags')->setColumns('col-md-4');
         yield AssociationField::new('user')->setPermission('ROLE_ADMIN')->setColumns('col-md-4');
         yield AssociationField::new('claimedByUser')->setRequired(FALSE);
@@ -165,24 +171,6 @@ class BodygraphCrudController extends AbstractCrudController
             'teamPenta' => $teamPenta
         ]);
     }
-    /**
-     * @param AdminContext $context
-     * @return Response+
-     */
-    public function calculateDesignAction(AdminContext $context): Response
-    {
-        $bodygraph = $context->getEntity()->getInstance();
-
-        $this->bodygraphService->calculateData($bodygraph);
-
-        $bodygraphImage = $this->imageToBase64($this->getParameter('kernel.project_dir') . '/public/img/graphs/' . $bodygraph->getImage());
-
-        return $this->render('bodygraph/displayReport.html.twig', [
-            'bodygraph' => $bodygraph,
-            'bodygraphImage' => $bodygraphImage,
-            'celestialBodies' => $this->celestialBodiesRepository->getCelestialBodiesByIdentifier()
-        ]);
-    }
 
     /**
      * @param string $path
@@ -204,7 +192,7 @@ class BodygraphCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $bodygraph = new $entityFqcn();
-
+        /** 
         foreach (CelestialBody::asList as $celestialBodyIdentifier) {
             $gateActivation = new GateActivation();
             $gateActivation->setBodygraph($bodygraph);
@@ -218,6 +206,9 @@ class BodygraphCrudController extends AbstractCrudController
             $gateActivation->setCelestialBody($this->celestialBodiesRepository->getCelestialBodyByIdentifier($celestialBodyIdentifier));
             $gateActivation->setMode(CelestialBody::activationModePersonality);
         }
+         */
+
+
 
         return $bodygraph;
     }
@@ -264,7 +255,8 @@ class BodygraphCrudController extends AbstractCrudController
         // Modify the entity before it's persisted
         if ($bodygraph instanceof Bodygraph) {
 
-            //$this->bodygraphService->calculateData($bodygraph);
+            $this->bodygraphService->calculateData($bodygraph);
+
 
 
             $this->bodygraphService->processBodygraph($bodygraph);

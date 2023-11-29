@@ -435,6 +435,21 @@ class Bodygraph
      */
     private $midheavenPersonality;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $latitude;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $longitude;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $birthCountry;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -1642,6 +1657,42 @@ class Bodygraph
     public function setMidheavenPersonality(?Gate $midheavenPersonality): self
     {
         $this->midheavenPersonality = $midheavenPersonality;
+
+        return $this;
+    }
+
+    public function getLatitude(): ?float
+    {
+        return $this->latitude;
+    }
+
+    public function setLatitude(?float $latitude): self
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
+    public function getLongitude(): ?float
+    {
+        return $this->longitude;
+    }
+
+    public function setLongitude(?float $longitude): self
+    {
+        $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    public function getBirthCountry(): ?string
+    {
+        return $this->birthCountry;
+    }
+
+    public function setBirthCountry(string $birthCountry): self
+    {
+        $this->birthCountry = $birthCountry;
 
         return $this;
     }
