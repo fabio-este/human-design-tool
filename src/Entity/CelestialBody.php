@@ -24,8 +24,10 @@ class CelestialBody
     public const saturn = 'saturn';
     public const uranus = 'uranus';
     public const neptune = 'neptune';
-    public const pluto = 'pluto';    
+    public const pluto = 'pluto';
     public const chiron = 'chiron';
+    public const lilith = 'lilith';
+
 
     public const activationModeDesign = 'design';
     public const activationModePersonality = 'personality';
@@ -44,8 +46,10 @@ class CelestialBody
         self::uranus,
         self::neptune,
         self::pluto,
+        self::chiron,
+        self::lilith,
     ];
-    
+
 
     /**
      * @ORM\Id

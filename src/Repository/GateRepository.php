@@ -39,28 +39,45 @@ class GateRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Gate[] Returns an array of Gate objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('g')
-//            ->andWhere('g.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('g.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findByDegree(float $degree): ?Gate
+    {
+        $qb = $this->createQueryBuilder('gate');
 
-//    public function findOneBySomeField($value): ?Gate
-//    {
-//        return $this->createQueryBuilder('g')
-//            ->andWhere('g.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $query = $qb
+            ->select('gate')
+            ->where(
+                $qb->expr()->andX(
+                    //@todo why is it the toher way around?????
+                    $qb->expr()->lt('gate.degreeFromAbsolute', $degree),
+                    $qb->expr()->gte('gate.degreeToAbsolute', $degree)
+                )
+            )->getQuery();
+
+        return $query->getOneOrNullResult();
+    }
+
+    //    /**
+    //     * @return Gate[] Returns an array of Gate objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('g')
+    //            ->andWhere('g.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('g.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?Gate
+    //    {
+    //        return $this->createQueryBuilder('g')
+    //            ->andWhere('g.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

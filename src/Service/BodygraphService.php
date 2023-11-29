@@ -21,6 +21,8 @@ use App\Repository\ChannelRepository;
 use App\Repository\IncarnationCrossRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\AstrologyAPI\AstrologyApiClient;
+use App\Repository\GateRepository;
+use DateInterval;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
@@ -33,6 +35,11 @@ use Symfony\Component\Intl\Timezones;
  */
 class BodygraphService
 {
+    /**
+     * @var GateRepository
+     */
+    protected GateRepository $gateRepository;
+
     /**
      * @var ChannelRepository
      */
@@ -72,6 +79,7 @@ class BodygraphService
     //protected SwissEphemeris $sweph;
     public function __construct(
         EntityManagerInterface $entityManager,
+        GateRepository $gateRepository,
         BodygraphRepository $bodygraphRepository,
         ChannelRepository $channelRepository,
         CenterRepository $centerRepository,
@@ -80,6 +88,7 @@ class BodygraphService
     ) {
         $this->bodygraphRepository = $bodygraphRepository;
         $this->channelRepository = $channelRepository;
+        $this->gateRepository = $gateRepository;
         $this->centerRepository = $centerRepository;
         $this->incarnationCrossRepository = $incarnationCrossRepository;
         $this->entityManager = $entityManager;
@@ -109,16 +118,383 @@ class BodygraphService
 
         $timezoneOffset = (int) $this->ch150918__utc_offset_dst($timezone, $birthdatetime);
         dump($day, $month, $year, $hour, $minute, $lat, $lon, $timezoneOffset);
-        $apiResponse = $this->astrologyAPI->getWesternHoroscope($day, $month, $year, $hour, $minute, $lat, $lon, $timezoneOffset);
+        $personalityApiResponse = $this->astrologyAPI->getWesternHoroscope($day, $month, $year, $hour, $minute, $lat, $lon, $timezoneOffset);
 
-        $apiData = json_decode($apiResponse, TRUE);
+        $personalityApiData = json_decode($personalityApiResponse, TRUE);
 
-        $bodygraph->setApiResponse($apiData);
+        if (isset($personalityApiData['error'])) {
+            //@todo make error notification!
+            dd('API ERROR!!!', $personalityApiData);
+        }
+
+        //   $this->calculateAndSetPersonalityGatesAndLines($bodygraph, $personalityApiData, 'Personality');
 
 
 
-        dd($apiData);
+        $sundegreeP = $personalityApiData['planets'][0]['full_degree'];
+
+
+
+
+
+
+
+        $designDatetime = clone $bodygraph->getBirthdatetime();
+
+        $secondsDifference = '7810380';
+        $designDatetime->sub(new DateInterval('PT' . (int) $secondsDifference . 'S'));
+        dump($designDatetime);
+        $designDay = $designDatetime->format('d');
+        $designMonth = $designDatetime->format('m');
+        $designYear = $designDatetime->format('Y');
+        $designHour = $designDatetime->format('H');
+        $designMinute = $designDatetime->format('i');
+
+        $designApiResponse = $this->astrologyAPI->getWesternHoroscope($designDay, $designMonth, $designYear, $designHour, $designMinute, $lat, $lon, 0);
+
+        $designApiData = json_decode($designApiResponse, TRUE);
+        $sundegreeD = $designApiData['planets'][0]['full_degree'];
+
+        dump($designApiData);
+        dump($sundegreeP, $sundegreeD);
+        dump(360 - ($sundegreeD - $sundegreeP));
+
+        if (isset($designApiData['error'])) {
+            //@todo make error notification!
+            dd('API ERROR!!!', $designApiData);
+        }
+
+        $this->calculateAndSetDesignGatesAndLines($bodygraph, $designApiData);
+        dump($bodygraph);
+
+        dd($personalityApiData);
     }
+
+    /**
+     * Undocumented function
+     *
+     * @param Bodygraph $bodygraph
+     * @param array $apiData
+     * @param string $mode
+     * @return void
+     */
+    protected function calculateAndSetPersonalityGatesAndLines(Bodygraph $bodygraph, array $apiData)
+    {
+        /**
+         * PLANETS
+         */
+        $planets = $apiData['planets'] ?? FALSE;
+
+        if ($planets) {
+            foreach ($planets as $planet) {
+                $planetName = $planet['name'] ?? FALSE;
+                $degree = $planet['full_degree'] ?? FALSE;
+
+                $gate = $this->gateRepository->findByDegree($degree);
+
+                if ($planetName) {
+                    switch ($planetName) {
+                        case 'Sun':
+                            $bodygraph->setSunPersonality($gate);
+                            $bodygraph->setSunPersonalityLine($this->calculateLine($gate, $degree));
+
+                            $earthDegree = $this->calcEarthDegree($degree);
+                            $earthGate = $this->gateRepository->findByDegree($earthDegree);
+
+                            $bodygraph->setEarthPersonality($earthGate);
+                            $bodygraph->setEarthPersonalityLine($this->calculateLine($earthGate, $earthDegree));
+                            break;
+                        case 'Node':
+                            $bodygraph->setNorthNodePersonality($gate);
+                            $bodygraph->setNorthNodePersonalityLine($this->calculateLine($gate, $degree));
+
+                            $southNodeDegree = $this->calcEarthDegree($degree);
+                            $southNodeGate = $this->gateRepository->findByDegree($southNodeDegree);
+
+                            $bodygraph->setSouthNodePersonality($southNodeGate);
+                            $bodygraph->setSouthNodePersonalityLine($this->calculateLine($southNodeGate, $southNodeDegree));
+                            break;
+                        case 'Moon':
+                            $bodygraph->setMoonPersonality($gate);
+                            $bodygraph->setMoonPersonalityLine($this->calculateLine($gate, $degree));
+                            break;
+                        case 'Mars':
+                            $bodygraph->setMarsPersonality($gate);
+                            $bodygraph->setMarsPersonalityLine($this->calculateLine($gate, $degree));
+                            break;
+                        case 'Mercury':
+                            $bodygraph->setMercuryPersonality($gate);
+                            $bodygraph->setMercuryPersonalityLine($this->calculateLine($gate, $degree));
+                            break;
+                        case 'Jupiter':
+                            $bodygraph->setJupiterPersonality($gate);
+                            $bodygraph->setJupiterPersonalityLine($this->calculateLine($gate, $degree));
+                            break;
+                        case 'Venus':
+                            $bodygraph->setVenusPersonality($gate);
+                            $bodygraph->setVenusPersonalityLine($this->calculateLine($gate, $degree));
+                            break;
+                        case 'Saturn':
+                            $bodygraph->setSaturnPersonality($gate);
+                            $bodygraph->setSaturnPersonalityLine($this->calculateLine($gate, $degree));
+                            break;
+                        case 'Uranus':
+                            $bodygraph->setUranusPersonality($gate);
+                            $bodygraph->setUranusPersonalityLine($this->calculateLine($gate, $degree));
+                            break;
+                        case 'Neptune':
+                            $bodygraph->setNeptunePersonality($gate);
+                            $bodygraph->setNeptunePersonalityLine($this->calculateLine($gate, $degree));
+                            break;
+                        case 'Pluto':
+                            $bodygraph->setPlutoPersonality($gate);
+                            $bodygraph->setPlutoPersonalityLine($this->calculateLine($gate, $degree));
+                            break;
+                        case 'Chiron':
+                            $bodygraph->setChironPersonality($gate);
+                            break;
+                        case 'Midheaven':
+                            $bodygraph->setMidheavenPersonality($gate);
+                            break;
+                        case 'Part of Fortune':
+                            $bodygraph->setPartOfFortunePersonality($gate);
+                            break;
+                    }
+                }
+            }
+        }
+
+        /**
+         * ASCENDANT
+         */
+        $ascendant = $apiData['ascendant'] ?? FALSE;
+
+        if ($ascendant) {
+            $ascendantGate = $this->gateRepository->findByDegree($ascendant);
+            $bodygraph->setAscendantPersonality($ascendantGate);
+            dump('ascendant');
+            dump($ascendantGate->getId());
+        }
+
+        /**
+         * MIDHEAVEN
+         */
+        $midheaven = $apiData['midheaven'] ?? FALSE;
+
+        if ($midheaven) {
+            $midheavenGate = $this->gateRepository->findByDegree($midheaven);
+            $bodygraph->setMidheavenPersonality($midheavenGate);
+            dump('midheaven');
+            dump($midheavenGate->getId());
+        }
+
+        /**
+         * LILITH
+         */
+        $lilith = $apiData['lilith'] ?? FALSE;
+
+        if ($lilith) {
+            $lilithDegree = $lilith['full_degree'] ?? FALSE;
+
+            if ($lilithDegree) {
+                $lilithGate = $this->gateRepository->findByDegree($lilithDegree);
+                $bodygraph->setLilitPersonality($lilithGate);
+
+                dump('lilith');
+                dump($lilithGate->getId());
+            }
+        }
+
+
+        $bodygraph->setPersonalityAPIResponse($apiData);
+    }
+    /**
+     * Undocumented function
+     *
+     * @param Bodygraph $bodygraph
+     * @param array $apiData
+     * @param string $mode
+     * @return void
+     */
+    protected function calculateAndSetDesignGatesAndLines(Bodygraph $bodygraph, array $apiData)
+    {
+        /**
+         * PLANETS
+         */
+        $planets = $apiData['planets'] ?? FALSE;
+
+        if ($planets) {
+            foreach ($planets as $planet) {
+                $planetName = $planet['name'] ?? FALSE;
+                $degree = $planet['full_degree'] ?? FALSE;
+
+                $gate = $this->gateRepository->findByDegree($degree);
+
+                dump($planetName);
+                dump($gate->getId() . ' - ' . $this->calculateLine($gate, $degree));
+
+                if ($planetName) {
+                    switch ($planetName) {
+                        case 'Sun':
+                            $bodygraph->setSunDesign($gate);
+                            $bodygraph->setSunDesignLine($this->calculateLine($gate, $degree));
+
+                            $earthDegree = $this->calcEarthDegree($degree);
+                            $earthGate = $this->gateRepository->findByDegree($earthDegree);
+
+                            $bodygraph->setEarthDesign($earthGate);
+                            $bodygraph->setEarthDesignLine($this->calculateLine($earthGate, $earthDegree));
+                            break;
+                        case 'Node':
+                            $bodygraph->setNorthNodeDesign($gate);
+                            $bodygraph->setNorthNodeDesignLine($this->calculateLine($gate, $degree));
+
+                            $southNodeDegree = $this->calcEarthDegree($degree);
+                            $southNodeGate = $this->gateRepository->findByDegree($southNodeDegree);
+
+                            $bodygraph->setSouthNodeDesign($southNodeGate);
+                            $bodygraph->setSouthNodeDesignLine($this->calculateLine($southNodeGate, $southNodeDegree));
+                            break;
+                        case 'Moon':
+                            $bodygraph->setMoonDesign($gate);
+                            $bodygraph->setMoonDesignLine($this->calculateLine($gate, $degree));
+                            break;
+                        case 'Mars':
+                            $bodygraph->setMarsDesign($gate);
+                            $bodygraph->setMarsDesignLine($this->calculateLine($gate, $degree));
+                            break;
+                        case 'Mercury':
+                            $bodygraph->setMercuryDesign($gate);
+                            $bodygraph->setMercuryDesignLine($this->calculateLine($gate, $degree));
+                            break;
+                        case 'Jupiter':
+                            $bodygraph->setJupiterDesign($gate);
+                            $bodygraph->setJupiterDesignLine($this->calculateLine($gate, $degree));
+                            break;
+                        case 'Venus':
+                            $bodygraph->setVenusDesign($gate);
+                            $bodygraph->setVenusDesignLine($this->calculateLine($gate, $degree));
+                            break;
+                        case 'Saturn':
+                            $bodygraph->setSaturnDesign($gate);
+                            $bodygraph->setSaturnDesignLine($this->calculateLine($gate, $degree));
+                            break;
+                        case 'Uranus':
+                            $bodygraph->setUranusDesign($gate);
+                            $bodygraph->setUranusDesignLine($this->calculateLine($gate, $degree));
+                            break;
+                        case 'Neptune':
+                            $bodygraph->setNeptuneDesign($gate);
+                            $bodygraph->setNeptuneDesignLine($this->calculateLine($gate, $degree));
+                            break;
+                        case 'Pluto':
+                            $bodygraph->setPlutoDesign($gate);
+                            $bodygraph->setPlutoDesignLine($this->calculateLine($gate, $degree));
+                            break;
+                        case 'Chiron':
+                            $bodygraph->setChironDesign($gate);
+                            break;
+                        case 'Midheaven':
+                            $bodygraph->setMidheavenDesign($gate);
+                            break;
+                        case 'Part of Fortune':
+                            $bodygraph->setPartOfFortuneDesign($gate);
+                            break;
+                    }
+                }
+            }
+        }
+
+        /**
+         * ASCENDANT
+         */
+        $ascendant = $apiData['ascendant'] ?? FALSE;
+
+        if ($ascendant) {
+            $ascendantGate = $this->gateRepository->findByDegree($ascendant);
+            $bodygraph->setAscendantDesign($ascendantGate);
+            dump('ascendant');
+            dump($ascendantGate->getId());
+        }
+
+        /**
+         * MIDHEAVEN
+         */
+        $midheaven = $apiData['midheaven'] ?? FALSE;
+
+        if ($midheaven) {
+            $midheavenGate = $this->gateRepository->findByDegree($midheaven);
+            $bodygraph->setMidheavenDesign($midheavenGate);
+            dump('midheaven');
+            dump($midheavenGate->getId());
+        }
+
+        /**
+         * LILITH
+         */
+        $lilith = $apiData['lilith'] ?? FALSE;
+
+        if ($lilith) {
+            $lilithDegree = $lilith['full_degree'] ?? FALSE;
+
+            if ($lilithDegree) {
+                $lilithGate = $this->gateRepository->findByDegree($lilithDegree);
+                $bodygraph->setLilithDesign($lilithGate);
+
+                dump('lilith');
+                dump($lilithGate->getId());
+            }
+        }
+
+
+        $bodygraph->setDesignAPIResponse($apiData);
+    }
+
+    /**
+     * @todo: make general gate-line mapping !?!?!?
+     *
+     * @param Gate $gate
+     * @param float $degree
+     * @return int
+     */
+    protected function calculateLine(Gate $gate, float $degree): int
+    {
+        $from = (float) $gate->getDegreeFromAbsolute();
+        $to = (float) $gate->getDegreeToAbsolute();
+        $diff = $to - $from;
+        $lineWidth = $diff / 6;
+
+        for (
+            $i = 1;
+            $i <= 6;
+            $i++
+        ) {
+            $fromLine = $from + (($i - 1) * $lineWidth);
+            $toLine = $from + ($i * $lineWidth);
+
+            if ($fromLine <= $degree &&  $toLine > $degree) {
+                return $i;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param float $degree
+     * @return float
+     */
+    protected function calcEarthDegree($degree)
+    {
+        $minus90 = $degree - 180;
+
+        if ($minus90 < 0) {
+            return 360 + $minus90;
+        }
+        return $minus90;
+    }
+
 
     /**
      * @param Bodygraph $bodygraph

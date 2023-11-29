@@ -375,6 +375,66 @@ class Bodygraph
      */
     private $apiResponse = [];
 
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $personalityApiResponse = [];
+
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $designApiResponse = [];
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Gate::class)
+     */
+    private $chironDesign;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Gate::class)
+     */
+    private $chironPersonality;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Gate::class)
+     */
+    private $lilithDesign;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Gate::class)
+     */
+    private $lilithPersonality;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Gate::class)
+     */
+    private $partOfFortuneDesign;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Gate::class)
+     */
+    private $partOfFortunePersonality;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Gate::class)
+     */
+    private $ascendantPersonality;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Gate::class)
+     */
+    private $ascendantDesign;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Gate::class)
+     */
+    private $midheavenDesign;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Gate::class)
+     */
+    private $midheavenPersonality;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -1438,6 +1498,150 @@ class Bodygraph
     public function setApiResponse(?array $apiResponse): self
     {
         $this->apiResponse = $apiResponse;
+
+        return $this;
+    }
+
+    public function getPersonalityApiResponse(): ?array
+    {
+        return $this->personalityApiResponse;
+    }
+
+    public function setPersonalityApiResponse(?array $personalityApiResponse): self
+    {
+        $this->personalityApiResponse = $personalityApiResponse;
+
+        return $this;
+    }
+
+    public function getDesignApiResponse(): ?array
+    {
+        return $this->designApiResponse;
+    }
+
+    public function setDesignApiResponse(?array $designApiResponse): self
+    {
+        $this->designApiResponse = $designApiResponse;
+
+        return $this;
+    }
+
+    public function getChironDesign(): ?Gate
+    {
+        return $this->chironDesign;
+    }
+
+    public function setChironDesign(?Gate $chironDesign): self
+    {
+        $this->chironDesign = $chironDesign;
+
+        return $this;
+    }
+
+    public function getChironPersonality(): ?Gate
+    {
+        return $this->chironPersonality;
+    }
+
+    public function setChironPersonality(?Gate $chironPersonality): self
+    {
+        $this->chironPersonality = $chironPersonality;
+
+        return $this;
+    }
+
+    public function getLilithDesign(): ?Gate
+    {
+        return $this->lilithDesign;
+    }
+
+    public function setLilithDesign(?Gate $lilithDesign): self
+    {
+        $this->lilithDesign = $lilithDesign;
+
+        return $this;
+    }
+
+    public function getLilithPersonality(): ?Gate
+    {
+        return $this->lilithPersonality;
+    }
+
+    public function setLilitPersonality(?Gate $lilithPersonality): self
+    {
+        $this->lilithPersonality = $lilithPersonality;
+
+        return $this;
+    }
+
+    public function getPartOfFortuneDesign(): ?Gate
+    {
+        return $this->partOfFortuneDesign;
+    }
+
+    public function setPartOfFortuneDesign(?Gate $partOfFortuneDesign): self
+    {
+        $this->partOfFortuneDesign = $partOfFortuneDesign;
+
+        return $this;
+    }
+
+    public function getPartOfFortunePersonality(): ?Gate
+    {
+        return $this->partOfFortunePersonality;
+    }
+
+    public function setPartOfFortunePersonality(?Gate $partOfFortunePersonality): self
+    {
+        $this->partOfFortunePersonality = $partOfFortunePersonality;
+
+        return $this;
+    }
+
+    public function getAscendantPersonality(): ?Gate
+    {
+        return $this->ascendantPersonality;
+    }
+
+    public function setAscendantPersonality(?Gate $ascendantPersonality): self
+    {
+        $this->ascendantPersonality = $ascendantPersonality;
+
+        return $this;
+    }
+
+    public function getAscendantDesign(): ?Gate
+    {
+        return $this->ascendantDesign;
+    }
+
+    public function setAscendantDesign(?Gate $ascendantDesign): self
+    {
+        $this->ascendantDesign = $ascendantDesign;
+
+        return $this;
+    }
+
+    public function getMidheavenDesign(): ?Gate
+    {
+        return $this->midheavenDesign;
+    }
+
+    public function setMidheavenDesign(?Gate $midheavenDesign): self
+    {
+        $this->midheavenDesign = $midheavenDesign;
+
+        return $this;
+    }
+
+    public function getMidheavenPersonality(): ?Gate
+    {
+        return $this->midheavenPersonality;
+    }
+
+    public function setMidheavenPersonality(?Gate $midheavenPersonality): self
+    {
+        $this->midheavenPersonality = $midheavenPersonality;
 
         return $this;
     }

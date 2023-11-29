@@ -18,7 +18,7 @@ class CelestialBodyCrudController extends AbstractCrudController
     {
         return CelestialBody::class;
     }
-    
+
     /**
      * @param string $pageName
      * 
@@ -44,18 +44,18 @@ class CelestialBodyCrudController extends AbstractCrudController
                 CelestialBody::saturn => CelestialBody::saturn,
                 CelestialBody::uranus => CelestialBody::uranus,
                 CelestialBody::neptune => CelestialBody::neptune,
-                CelestialBody::pluto => CelestialBody::pluto,  
-                CelestialBody::chiron => CelestialBody::chiron,                
+                CelestialBody::pluto => CelestialBody::pluto,
+                CelestialBody::chiron => CelestialBody::chiron, CelestialBody::chiron => CelestialBody::chiron,
             ]),
             CKEditorField::new('description'),
 
-            TextField::new('titleDesign'),      
+            TextField::new('titleDesign'),
             CKEditorField::new('descriptionDesign'),
             TextField::new('titlePersonality'),
             CKEditorField::new('descriptionPersonality'),
         ];
     }
-    
+
     /**
      * @param Crud $crud
      * @return Crud
