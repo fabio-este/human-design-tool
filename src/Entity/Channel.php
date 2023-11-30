@@ -132,12 +132,14 @@ class Channel
         return $this;
     }
 
-    public function getGateA(){
-        return $this->gates[0];
+    public function getGateA(): ?Gate
+    {
+        return $this->gates[0] ?? NULL;
     }
 
-    public function getGateB(){
-        return $this->gates[1];
+    public function getGateB(): ?Gate
+    {
+        return $this->gates[1] ?? NULL;
     }
 
     /**
@@ -167,7 +169,8 @@ class Channel
         return $this;
     }
 
-    public function gatesAsString(){
+    public function gatesAsString()
+    {
         return $this->getGateA()->getId() . ' - ' . $this->getGateB()->getId();
     }
 
@@ -231,4 +234,22 @@ class Channel
         return $this;
     }
 
+    public function isConnectedToThroat()
+    {
+        $gates = $this->getGates();
+        dump('123123');
+
+
+        foreach ($gates as $gate) {
+            dump($gate->getId());
+
+            $center = $gate->getCenter()[0];
+
+            if ($center instanceof Center &&  $center->getIdentifier() === Center::THROAT) {
+                return TRUE;
+            }
+        }
+
+        return FALSE;
+    }
 }

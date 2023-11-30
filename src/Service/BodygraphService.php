@@ -21,11 +21,14 @@ use App\Repository\ChannelRepository;
 use App\Repository\IncarnationCrossRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\AstrologyAPI\AstrologyApiClient;
+use App\Entity\AuraType;
+use App\Repository\AuraTypeRepository;
 use App\Repository\GateRepository;
 use DateInterval;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
+use Doctrine\Common\Collections\ArrayCollection;
 use Geocoder\Model\Coordinates;
 use Symfony\Component\Intl\Timezones;
 
@@ -52,6 +55,11 @@ class BodygraphService
     protected CenterRepository $centerRepository;
 
     /**
+     * @var AuraTypeRepository
+     */
+    protected AuraTypeRepository $auraTypeRepository;
+
+    /**
      * @var BodygraphRepository
      */
     protected BodygraphRepository $bodygraphRepository;
@@ -76,6 +84,8 @@ class BodygraphService
      */
     protected GeoCodingService $geocoder;
 
+    protected array $throatRecursiveBreak = [];
+
     /**
      * @param EntityManagerInterface $entityManager
      * @param ChannelRepository $channelRepository
@@ -90,6 +100,7 @@ class BodygraphService
         ChannelRepository $channelRepository,
         CenterRepository $centerRepository,
         IncarnationCrossRepository $incarnationCrossRepository,
+        AuraTypeRepository $auraTypeRepository,
         AstrologyApiClient $astrologyAPI,
         GeoCodingService $geocoder
     ) {
@@ -98,9 +109,11 @@ class BodygraphService
         $this->gateRepository = $gateRepository;
         $this->centerRepository = $centerRepository;
         $this->incarnationCrossRepository = $incarnationCrossRepository;
+        $this->auraTypeRepository = $auraTypeRepository;
         $this->entityManager = $entityManager;
         $this->astrologyAPI = $astrologyAPI;
         $this->geocoder = $geocoder;
+        //   $this->throatRecursiveBreak = new ArrayCollection();
         //$this->sweph = $sweph;
     }
 
@@ -178,6 +191,7 @@ class BodygraphService
         }
 
         $this->calculateAndSetDesignGatesAndLines($bodygraph, $designApiData);
+        dump('-------');
         dump($bodygraph);
 
         dump($personalityApiData);
@@ -517,7 +531,7 @@ class BodygraphService
     {
         $this->determineChannels($bodygraph);
         $this->determineCenters($bodygraph);
-        //$this->determinAuraType($bodygraph);
+        $this->determinAuraType($bodygraph);
         $this->determineIncarnationCross($bodygraph);
     }
 
@@ -631,26 +645,31 @@ class BodygraphService
      */
     protected function determinAuraType(Bodygraph $bodygraph)
     {
-
         $centerStatuses = $bodygraph->getCenterStatuses();
 
-        //   $bodygraph->setAuraType(AuraType::REFLECTOR);
+        $auraType =  AuraType::REFLECTOR;
 
-        foreach ($centerStatuses as $centerStatus) {
-            dump($centerStatus->getCenter()->getTitle() . ' : ' . $centerStatus->getStatus());
-            $center = $centerStatus->getCenter();
-            if ($center->getIdentifier() === Center::SACRAl) {
-                dump('CHECK FOR MOTOR THROAT CONNECTION!!!');
-                dump($center->getIdentifier() . ':' . $center->isMotorType());
-                dump($centerStatus->getStatus() === CenterStatus::DEFINED && $center->isMotorType() === TRUE);
-                dump($this->centerHasConnectionToThroat($center, $bodygraph));
-                if ($centerStatus->getStatus() === CenterStatus::DEFINED && $center->isMotorType() === TRUE && $this->centerHasConnectionToThroat($center, $bodygraph)) {
-                    dd('!!!!!!!!!!!! MOTOR CONNECTED TO THROST !!!!!!!!!!!!');
+        if ($bodygraph->hasDefinedCenter()) {
+            $auraType =  AuraType::PROJECTOR;
+        }
+
+        if ($bodygraph->hasDefinedSacralCenter()) {
+            $auraType =  AuraType::GENERATOR;
+        }
+
+        $definedMotorCenters = $bodygraph->getDefinedMotorCenters();
+
+        foreach ($definedMotorCenters as $definedMotorCenter) {
+            if ($this->centerHasConnectionToThroat($definedMotorCenter->getCenter(), $bodygraph)) {
+                if ($bodygraph->hasDefinedSacralCenter()) {
+                    $auraType =  AuraType::MANIFESTING_GENERATOR;
+                    break;
+                } else {
+                    $auraType =  AuraType::MANIFESTOR;
                 }
             }
         }
-
-        die;
+        $bodygraph->setAuraType($this->auraTypeRepository->findOneByIdentifier($auraType));
     }
 
     /**
@@ -660,21 +679,23 @@ class BodygraphService
      */
     protected function centerHasConnectionToThroat(Center $center, Bodygraph $bodygraph)
     {
+        dump($center);
         $centerChannels = $bodygraph->getChannelsByCenter($center);
-        dump($centerChannels);
-        foreach ($centerChannels as $channel) {
-            $gates = $channel->getGates();
-            foreach ($gates as $gate) {
-                $gateChannel = $gate->getChannels();
-                dump($gateChannel);
-            }
 
-            if ($channel->getCenter()->getIdentifier() === Center::THROAT) {
+        foreach ($centerChannels as $channel) {
+            if ($channel->isConnectedToThroat()) {
                 return TRUE;
             } else {
-                $this->centerHasConnectionToThroat($center, $bodygraph);
+                $channelGates  = $channel->getGates();
+                foreach ($channelGates as $channelGate) {
+                    // WHY IS IT A COLLECTION?!
+                    if ($channelGate->getCenter()[0] !== $center) {
+                        return $this->centerHasConnectionToThroat($channelGate->getCenter()[0], $bodygraph);
+                    }
+                }
             }
         }
+        return FALSE;
     }
 
     protected function getUTCOffset($timezone, $birthdatetime)

@@ -45,7 +45,8 @@ class CelestialBodyCrudController extends AbstractCrudController
                 CelestialBody::uranus => CelestialBody::uranus,
                 CelestialBody::neptune => CelestialBody::neptune,
                 CelestialBody::pluto => CelestialBody::pluto,
-                CelestialBody::chiron => CelestialBody::chiron, CelestialBody::chiron => CelestialBody::chiron,
+                CelestialBody::chiron => CelestialBody::chiron,
+                CelestialBody::lilith => CelestialBody::lilith,
             ]),
             CKEditorField::new('description'),
 

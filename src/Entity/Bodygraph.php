@@ -1025,6 +1025,114 @@ class Bodygraph
         return NULL;
     }
 
+    public function hasDefinedCenter()
+    {
+        $centerStates = $this->getCenterStatuses();
+
+        foreach ($centerStates as $centerStatus) {
+            if ($centerStatus->getStatus() === CenterStatus::DEFINED) {
+                return TRUE;
+            }
+        }
+        return FALSE;
+    }
+
+    public function hasDefinedSacralCenter()
+    {
+        $centerStates = $this->getCenterStatuses();
+
+        foreach ($centerStates as $centerStatus) {
+            if (
+                $centerStatus->getCenter()->getIdentifier() === Center::SACRAl
+                && $centerStatus->getStatus() === CenterStatus::DEFINED
+            ) {
+                return TRUE;
+            }
+        }
+        return FALSE;
+    }
+
+    /**
+     * 
+     */
+    public function getMotorCenters()
+    {
+        $centerStates = $this->getCenterStatuses();
+        $motorCenters = new ArrayCollection();
+
+        foreach ($centerStates as $centerStatus) {
+            if (
+                $centerStatus->getCenter()->getIdentifier() === Center::SACRAl ||
+                $centerStatus->getCenter()->getIdentifier() === Center::HEART ||
+                $centerStatus->getCenter()->getIdentifier() === Center::SOLARPLEXUS ||
+                $centerStatus->getCenter()->getIdentifier() === Center::ROOT
+            ) {
+                $motorCenters->add($centerStatus);
+            }
+        }
+        return $motorCenters;
+    }
+    public function getDefinedCenters()
+    {
+        $centers = $this->getCenterStatuses();
+        $definedCenters = new ArrayCollection();
+
+        foreach ($centers as $center) {
+            if (
+                $center->getStatus() === CenterStatus::DEFINED
+            ) {
+                $definedCenters->add($center);
+            }
+        }
+        return $definedCenters;
+    }
+
+    public function getDefinedMotorCenters()
+    {
+        $motorCenters = $this->getMotorCenters();
+        $definedMotorCenters = new ArrayCollection();
+
+        foreach ($motorCenters as $motorCenter) {
+            if (
+                $motorCenter->getStatus() === CenterStatus::DEFINED
+            ) {
+                $definedMotorCenters->add($motorCenter);
+            }
+        }
+        return $definedMotorCenters;
+    }
+
+    public function getChannelByGate(Gate $gate)
+    {
+        $channels = $this->getChannels();
+
+        if ($channels->count() > 0) {
+            foreach ($channels as $channel) {
+                if ($channel->getGateA() === $gate || $channel->getGateB() === $gate) {
+                    return $channel;
+                }
+            }
+        }
+        return FALSE;
+    }
+
+    public function getOpposingActivatedGate(Gate $gate)
+    {
+        $channels = $this->getChannels();
+
+        if ($channels->count() > 0) {
+            foreach ($channels as $channel) {
+                if ($channel->getGateA() === $gate) {
+                    return $channel->getGateB();
+                }
+                if ($channel->getGateB() === $gate) {
+                    return $channel->getGateA();
+                }
+            }
+        }
+        return FALSE;
+    }
+
     public function getAuthority(): ?Authority
     {
         return $this->authority;

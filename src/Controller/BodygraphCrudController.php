@@ -240,7 +240,8 @@ class BodygraphCrudController extends AbstractCrudController
 
         // Modify the entity before it's persisted
         if ($bodygraph instanceof Bodygraph) {
-            //  $this->bodygraphService->calculateData($bodygraph);
+            $this->bodygraphService->calculateData($bodygraph);
+
             $this->bodygraphService->processBodygraph($bodygraph);
         }
         parent::updateEntity($entityManager, $bodygraph);
