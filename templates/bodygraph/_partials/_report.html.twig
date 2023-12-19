@@ -1,3 +1,6 @@
+{% set customStylesheet = 'build/css/' ~  bodygraph.user.username ~ '.css' %}
+
+<link href="{{ asset(customStylesheet) }}" rel="stylesheet" />
 
 {% include 'bodygraph/_partials/01_general.html.twig' with { bodygraph: bodygraph } %}
 

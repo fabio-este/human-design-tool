@@ -1,0 +1,46 @@
+@import "main.scss";
+
+div#toc {
+  background-color: #000;
+  color: #fff;
+  &:before {
+    content: " ";
+    position: absolute;
+    right: 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background-image: radial-gradient(
+      circle at top,
+      #ad0440 0%,
+      #532671 17%,
+      #069fb4 32%,
+      #4aa421 50%,
+      #ffb802 68%,
+      #fc6c03 86%,
+      #de0c3a 100%
+    ) !important;
+    filter: blur(3px);
+    transform: rotate(180deg);
+    @include transition(all 500ms ease-in-out);
+  }
+  &:after {
+    content: " ";
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    left: 2px;
+    bottom: 2px;
+    background: #000 !important;
+
+    transform: rotate(180deg);
+    @include transition(all 500ms ease-in-out);
+  }
+
+  > ul,
+  > div,
+  > div a {
+    z-index: 999;
+    position: relative;
+  }
+}

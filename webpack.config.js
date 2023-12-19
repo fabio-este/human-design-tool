@@ -22,6 +22,7 @@ Encore
    */
   .addEntry("app", "./assets/app.js")
   .addEntry("css/main", "./assets/scss/main.scss")
+  .addEntry("css/admin", "./assets/scss/rainbow-revolution.scss")
   .addEntry("js/autoTOC", "./assets/js/autoTOC.js")
   .addEntry("js/bodygraph", "./assets/js/bodygraph.js")
 
