@@ -1,0 +1,22 @@
+hosts:
+  .server_mittwald: &base_mittwald
+    user: ssh-uwhk61@a-fgy51f
+    remote_user: ssh-uwhk61@a-fgy51f
+    http_user: ssh-uwhk61@a-fgy51f
+    port: 22
+    pty: true
+    forward_agent: true
+    #  multiplexing: true
+    #configFile: ~/.ssh/config
+    #identityFile: ~/.ssh/mittwald
+    bin:
+      php: /usr/local/bin/php_cli
+      composer: /usr/local/bin/composer
+
+  human-design.rainbow-revolution.com:
+    <<: *base_mittwald
+    remote_user: ssh-uwhk61@a-fgy51f
+    branch: master
+    forward_agent: true
+    deploy_path: "~/html/human-design-rainbow-pnxfx/"
+    hostname: "ssh.fiestel.project.host"

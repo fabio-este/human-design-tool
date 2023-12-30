@@ -1,27 +1,30 @@
 <?php
+
 namespace Deployer;
 
-require 'recipe/symfony4.php';
-require 'recipe/cachetool.php';
+require 'recipe/common.php';
+require 'contrib/rsync.php';
+require 'recipe/symfony.php';
 
-/*
- * Run either 'deploy' (Symfony 4 apps) or 'mydeploy' (adjusted for shared host one.com).
- * If running deployer as a project dependency on Windows you may need to run this:
- * php vendor/deployer/deployer/bin/dep deploy
- * instead of php vendor/bin/dep deploy
- */
+date_default_timezone_set('Europe/Berlin');
+
+
 
 // Project name
-set('application', 'homepage');
+set('application', 'Human Design Tools');
+
+// Import hosts
+import('servers.yaml');
+
+// Public dir
+set('typo3_public', 'public');
 
 // Project repository
-set('repository', 'git@git.rheingans.io:mr-education/freelancer-management.git');
+set('repository', 'https://github.com/fabio-este/human-design-tool.git');
 
-// this is the latest version that is compatible with php7
-set('bin/cachetool', 'cachetool-3.2.1.phar');
+// [Optional] Allocate tty for git clone. Default value is false.
+set('git_tty', true);
 
-// Hosts
-inventory('servers.yaml');
 
 set('bin/php', static function () {
     if (has('bin')) {
@@ -45,16 +48,14 @@ set('bin/composer', static function () {
 // [Optional] Allocate tty for git clone. Default value is false.
 set('git_tty', false);
 set('ssh_multiplexing', false);
-set('composer_options', '{{composer_action}} --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader');
 
-set('bin/cachetool', 'cachetool-3.2.1.phar');
-set('htaccess_credentials', '');
 set('cachetool_args', '--web --web-path={{deploy_path}}/current/public --web-url=https://{{htaccess_credentials}}{{hostname}}');
 
 
 // Shared files/dirs between deploys
 // Shared files/dirs between deploys
 add('shared_files', [
+    'public/robots.txt',
     'public/.htaccess',
     '.env.local',
 ]);
@@ -68,10 +69,18 @@ add('writable_dirs', [
     'var/log',
     'var/sessions',
 ]);
+
+// Writable options
+set('writable_tty', true);
+set('writable_mode', 'chmod');
+set('writable_use_sudo', false);
+set('writable_chmod_mode', '0775');
+set('writable_chmod_recursive', true);
+
 set('allow_anonymous_stats', false);
 
 // Tasks
-task('symlink:public', function() {
+task('symlink:public', function () {
     run('ln -s {{release_path}}/public/*  /www &&  ln -s {{release_path}}/public/.[^.]* /www');
 });
 
@@ -83,26 +92,22 @@ task('cache:clear', function () {
  * The downside of using it this way is that it doesn't remove files no longer present in git repo.
  * Assumed public directory is /www
  */
-task('copy:public', function() {
+task('copy:public', function () {
     run('cp -R {{release_path}}/public/*  /www && cp -R {{release_path}}/public/.[^.]* /www');
 });
 
 /* Uploads built assets from local to remote. Requires rsync.
  * Useful when you use Symfony encore/webpack and remote machine doesn't support npm/yarn.
  */
-task('upload:build', function() {
+task('upload:build', function () {
     upload("public/build/", '{{release_path}}/public/build/');
 });
 
-task('upload:build', function() {
-    upload("public/build/", '{{release_path}}/public/build/');
-});
-
-task('init:database', function() {
+task('init:database', function () {
     run('{{bin/php}} {{bin/console}} doctrine:schema:create');
 });
 
-task('echo:options', function() {
+task('echo:options', function () {
     writeln('OPTIONS: {{composer_options}}');
 });
 
@@ -110,48 +115,12 @@ task('build', function () {
     run('cd {{release_path}} && build');
 });
 
-task('assets:install', function() {
+task('assets:install', function () {
     run('{{bin/php}} {{bin/console}} assets:install');
 });
 
-task('cachetool:clear:decide', function() {
+task('cachetool:clear:decide', function () {
     if (has('  cachetool')) {
         invoke('cachetool:clear:opcache');
     }
 });
-
-task('initialize', [
-    'deploy:info',
-    'deploy:prepare',
-    'deploy:lock',
-    'deploy:release',
-    'deploy:update_code',
-    'deploy:shared',
-    'deploy:unlock',
-    'cleanup',
-]);
-
-task('deploy', [
-    'deploy:info',
-    'deploy:prepare',
-    'deploy:lock',
-    'deploy:release',
-    'deploy:update_code',
-    'deploy:shared',
-    'deploy:vendors',
-    'deploy:cache:clear',
-    'deploy:cache:warmup',
-    'deploy:symlink',
-    'assets:install',
-    'cachetool:clear:decide',
-    'deploy:unlock',
-    'cleanup',
-]);
-
-// [Optional] if deploy fails automatically unlock.
-after('deploy:failed', 'deploy:unlock');
-//after('deploy:unlock', 'copy:public');
-
-
-// Migrate database before symlink new release.
-before('deploy:symlink', 'database:migrate');
