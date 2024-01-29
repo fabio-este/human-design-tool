@@ -1,0 +1,83 @@
+
+<div id="menu">
+
+    <ul class="layer-buttons nav nav-tabs">
+
+        <li>
+            <a href="#" id="intro-tab" data-bs-toggle="tab" data-bs-target="#aura" type="button" role="tab" aria-controls="aura" aria-selected="true">
+                <img src="/build/img/icons/menu/aura.png" class="menu-icon" />
+                <span>
+                    Intro    
+                </span>
+            </a>
+        </li>
+
+        <li>
+            <a href="#" id="aura-tab" data-bs-toggle="tab" data-bs-target="#aura" type="button" role="tab" aria-controls="aura" aria-selected="true">
+                <img src="/build/img/icons/menu/aura.png" class="menu-icon" />
+                <span>
+                    Aura                
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="#" id="centers-tab" data-bs-toggle="tab" data-bs-target="#centers" type="button" role="tab" aria-controls="centers" aria-selected="true">
+                <img src="/build/img/icons/menu/centers.png" class="menu-icon" />
+                <span>
+                    Chakras             
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="#" id="gates-tab" data-bs-toggle="tab" data-bs-target="#gates" type="button" role="tab" aria-controls="gates" aria-selected="true">
+                <img src="/build/img/icons/menu/gates.png" class="menu-icon" />
+                <span>
+                    Activations      
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="#" id="channels-tab" data-bs-toggle="tab" data-bs-target="#channels" type="button" role="tab" aria-controls="channels" aria-selected="true">
+                <img src="/build/img/icons/menu/channels.png" class="menu-icon" />
+                <span>
+                    Superpowers
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="#" id="dharma-tab" data-bs-toggle="tab" data-bs-target="#dharma" type="button" role="tab" aria-controls="dharma" aria-selected="true">
+                <img src="/build/img/icons/menu/incarnation-cross.png" class="menu-icon" style="display: none;" />
+                <span>
+                    Lifepath
+                </span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+<div class="tab-content tab-display" id="myTabContent">
+    <div class="tab-pane fade show active" id="intro">    
+        {% include 'bodygraph/_partials/01_general.html.twig' with { bodygraph: bodygraph } %}
+    </div>
+
+    <div class="tab-pane fade show active" id="aura">
+        {% include 'bodygraph/_partials/01_general.html.twig' with { bodygraph: bodygraph } %}
+    </div>
+
+    <div class="tab-pane fade show active" id="chakras">
+        {% include 'bodygraph/_partials/02_centers.html.twig' with { bodygraph: bodygraph } %}
+    </div>
+
+    <div class="tab-pane fade show active" id="activations">
+        {% include 'bodygraph/_partials/03_gates.html.twig' with { bodygraph: bodygraph, celestialBodies: celestialBodies } %}
+    </div>
+
+    <div class="tab-pane fade show active" id="superpowers">
+        {% include 'bodygraph/_partials/05_channels.html.twig' with { bodygraph: bodygraph } %}
+    </div>
+
+    <div class="tab-pane fade show active" id="lifepath">
+        {% include 'bodygraph/_partials/06_incarnationCross.html.twig' with { bodygraph: bodygraph } %}
+    </div>
+</div>

@@ -4,7 +4,6 @@
 
 @import "components/login";
 @import "components/form";
-@import "components/fonts";
 @import "components/button";
 @import "components/header";
 @import "components/tags";
@@ -14,7 +13,10 @@
 @import "components/report";
 @import "components/spacing";
 @import "components/bodygraph";
+@import "components/scroll-indicator";
 
+@import "fonts/montserrat";
+@import "fonts/sansation";
 @import "pages/index";
 
 @import "../../node_modules/datatables/media/css/jquery.dataTables.css";
@@ -74,4 +76,22 @@ body#ea-index-Freelancer td.actions {
 
 table#freelancer.datagrid {
   border-bottom: 3px solid var(--content-top-border-color);
+}
+
+/**
+ANIMATIONS
+**/
+
+@keyframes steam {
+  0% {
+    background-position: 0 0;
+  }
+
+  50% {
+    background-position: 400% 0;
+  }
+
+  100% {
+    background-position: 0 0;
+  }
 }

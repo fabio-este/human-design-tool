@@ -1,54 +1,95 @@
 {% block incarnationCross %}
 
-	{% set incarnationCross = bodygraph.incarnationCross %}
+    {% set incarnationCross = bodygraph.incarnationCross %}
 
-	<h1>Ebene 6 - Inkarnationskreuz</h1>
+    <h1>
+        Ebene 6 - Inkarnationskreuz
+    </h1>
 
-	<h4>Allgmein</h4>
+    <h4>
+        Allgmein
+    </h4>
 
-	<p>Das Inkarnationskreuz besteht aus den vier wichtigsten Toren in deinem Chart und beschreibt damit den
-								        Sinn
-								        und Zweck deines Lebens, wenn du deiner Strategie & Authorität folgst und langfristig in deiner Signatur
-								        lebst.</p>
+    <p>
+        Das Inkarnationskreuz besteht aus den vier wichtigsten Toren in deinem Chart und beschreibt damit den
+        								        Sinn
+        								        und Zweck deines Lebens, wenn du deiner Strategie & Authorität folgst und langfristig in deiner Signatur
+        								        lebst.
+    </p>
 
-	<h2>{{ incarnationCross.title }}
-		<small><br>(
-			{{ incarnationCross.sunPersonality.id }}
-			/
-			{{ incarnationCross.earthPersonality.id }}
-			|
-			{{ incarnationCross.sunDesign.id }}
-			/
-			{{ incarnationCross.earthDesign.id }}
-			)
-		</small>
-	</h2>
+    <h2>
+        {{ incarnationCross.title }}
+        <small>
+            <br>
+                (
+                			
+                {{ incarnationCross.sunPersonality.id }}
+                /
+                			
+                {{ incarnationCross.earthPersonality.id }}
+                |
+                			
+                {{ incarnationCross.sunDesign.id }}
+                /
+                			
+                {{ incarnationCross.earthDesign.id }}
+                )
+                		
+            </small>
+        </h2>
 
-	<div class="incarnation-cross-gates">
-		<p>Bewusstes Sonnentor:
-			<br>Tor
-			{{ incarnationCross.sunPersonality.id }}
-			-
-			{{ incarnationCross.sunPersonality.title }}</p>
-		<p>Unbewusstes Sonnentor:
-			<br>Tor
-			{{ incarnationCross.sunDesign.id }}
-			-
-			{{ incarnationCross.sunDesign.title }}</p>
-		<p>Bewusstes Erdentor:
-			<br>Tor
-			{{ incarnationCross.earthPersonality.id }}
-			-
-			{{ incarnationCross.earthPersonality.title }}</p>
-		<p>Unbewusstes Erdentor:
-			<br>Tor
-			{{ incarnationCross.earthDesign.id }}
-			-
-			{{ incarnationCross.earthDesign.title }}</p>
-	</div>
-	{% if incarnationCross.description < 20 %}
-		<b>ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!</b>
-	{% endif %}
-	{{ incarnationCross.description | raw }}
-	<br>
-{% endblock %}
+        <div class="incarnation-cross-gates">
+            <p>
+                Bewusstes Sonnentor:
+                			
+                <br>
+                    Tor
+                    			
+                    {{ incarnationCross.sunPersonality.id }}
+                    -
+                    			
+                    {{ incarnationCross.sunPersonality.title }}
+                </p>
+                <p>
+                    Unbewusstes Sonnentor:
+                    			
+                    <br>
+                        Tor
+                        			
+                        {{ incarnationCross.sunDesign.id }}
+                        -
+                        			
+                        {{ incarnationCross.sunDesign.title }}
+                    </p>
+                    <p>
+                        Bewusstes Erdentor:
+                        			
+                        <br>
+                            Tor
+                            			
+                            {{ incarnationCross.earthPersonality.id }}
+                            -
+                            			
+                            {{ incarnationCross.earthPersonality.title }}
+                        </p>
+                        <p>
+                            Unbewusstes Erdentor:
+                            			
+                            <br>
+                                Tor
+                                			
+                                {{ incarnationCross.earthDesign.id }}
+                                -
+                                			
+                                {{ incarnationCross.earthDesign.title }}
+                            </p>
+                        </div>
+                        {% if incarnationCross.description < 20 %}
+                            <b>
+                                ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!
+                            </b>
+                        {% endif %}
+                        {{ incarnationCross.description | raw }}
+                        <br>
+                        {% endblock %}
+                        

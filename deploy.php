@@ -48,6 +48,7 @@ set('bin/composer', static function () {
 // [Optional] Allocate tty for git clone. Default value is false.
 set('git_tty', false);
 set('ssh_multiplexing', false);
+set('composer_options', '--prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader');
 
 set('cachetool_args', '--web --web-path={{deploy_path}}/current/public --web-url=https://{{htaccess_credentials}}{{hostname}}');
 

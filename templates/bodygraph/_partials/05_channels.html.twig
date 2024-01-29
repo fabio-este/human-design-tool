@@ -1,41 +1,241 @@
 {% block channels %}
 
-	<h1>Ebene 5 - Kanäle</h1>
+<h1 id="channels">
+    Ebene 5 - Kanäle
+                                                    
+                                                
+                                            
+                                        
+                                    
+                                
+                            
+                        
+                    
+                
+            
+        
+    
+</h1>
 
-	<h4>Allgmein</h4>
+<h4>
+    Allgmein
+                                                
+                                            
+                                        
+                                    
+                                
+                            
+                        
+                    
+                
+            
+        
+    
+</h4>
 
-	<p>Ein Kanal wird aktiviert, wenn zwei entgegengesetzte Tore aktiviert sind. Die Aktivierung eines Kanals
-		        definiert auch die Zentren (gefärbt), in denen sich diese Tore befinden.</p>
-	<p>Ein aktiver Kanal bedeutet, dass die Kommunikation und der Energiefluss zwischen den Zentren ständig
-		        verfügbar sind und keine andere Person notwendig ist, um den Kanal zu vervollständigen.</p>
+<p>
+    Ein Kanal wird aktiviert, wenn zwei entgegengesetzte Tore aktiviert sind. Die Aktivierung eines Kanals
+                                                    		        definiert auch die Zentren (gefärbt), in denen sich diese Tore befinden.
+                                                
+                                            
+                                        
+                                    
+                                
+                            
+                        
+                    
+                
+            
+        
+    
+</p>
+<p>
+    Ein aktiver Kanal bedeutet, dass der Energiefluss zwischen den Zentren ständig
+                                                    		        verfügbar sind. Aus den beiden unterschiedlichen Energien der Tore ergibt sich eine Synergie, die einerseits die Eigenschaften der beiden Tore verbindet, andererseits aber auch völlig neue Effekte mit sich bringen kann. 
+                                    
+                                
+                            
+                        
+                    
+                
+            
+        
+    
+</p>
 
-	{% for channel in bodygraph.channels %}
-		<div class="gate">
-			<h2>Kanal {{ channel.gates[0].id }}
-			-
-			{{ channel.gates[1].id }} - {{ channel.title }}</h2>
-			<p>
-				<b>{{ channel.themes }}</b>
-			</p>
+{% for channel in bodygraph.channels %}
+    <div class="gate">
+        <h2>
+            Kanal 
+                                                                                                                                                            
+                                                                                                                                                
+                                                                                                                                    
+                                                                                                                        
+                                                                                                            
+                                                                                                
+                                                                                    
+                                                                        
+                                                            
+                                                
+                                    
+                        
+            {{ channel.gates[0].id }}
+            -
+                                                                                                                                                            			
+                                                                                                                                                            
+                                                                                                                                                
+                                                                                                                                    
+                                                                                                                        
+                                                                                                            
+                                                                                                
+                                                                                    
+                                                                        
+                                                            
+                                                
+                                    
+                        
+            {{ channel.gates[1].id }}
+            - 
+                                                                                                                                                            
+                                                                                                                                                
+                                                                                                                                    
+                                                                                                                        
+                                                                                                            
+                                                                                                
+                                                                                    
+                                                                        
+                                                            
+                                                
+                                    
+                        
+            {{ channel.title }}
+        </h2>
+        <p>
+            <b>
+                {{ channel.themes }}
+            </b>
+        </p>
 
-			<p>
-				<i>
-					Vom Tor {{ channel.gateA.id }} ({{channel.gateA.title}}) im <b>{{channel.gateA.center[0].title}}</b>
-					ins Tor {{ channel.gateB.id }} ({{channel.gateB.title}}) im <b>{{channel.gateB.center[0].title}}</b>
-				</i>
-			</p>
+        <p>
+            <i>
+                Vom Tor 
+                                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                
+                                                                                                                                
+                                                                                                                
+                                                                                                
+                                                                                
+                                                                
+                                                
+                                
+                {{ channel.gateA.id }}
+                (
+                                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                
+                                                                                                                                
+                                                                                                                
+                                                                                                
+                                                                                
+                                                                
+                                                
+                                
+                {{ channel.gateA.title }}
+                ) im 
+                                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                
+                                                                                                                                
+                                                                                                                
+                                                                                                
+                                                                                
+                                                                
+                                                
+                                
+                <b>
+                    {{ channel.gateA.center[0].title }}
+                </b>
+                ins Tor 
+                                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                
+                                                                                                                                
+                                                                                                                
+                                                                                                
+                                                                                
+                                                                
+                                                
+                                
+                {{ channel.gateB.id }}
+                (
+                                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                
+                                                                                                                                
+                                                                                                                
+                                                                                                
+                                                                                
+                                                                
+                                                
+                                
+                {{ channel.gateB.title }}
+                ) im 
+                                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                
+                                                                                                                                                                
+                                                                                                                                                
+                                                                                                                                
+                                                                                                                
+                                                                                                
+                                                                                
+                                                                
+                                                
+                                
+                <b>
+                    {{ channel.gateB.center[0].title }}
+                </b>
+            </i>
+        </p>
 
-			<p>
-				{% for property in channel.properties %}
-					<span class="property">{{ property.title }}</span>
-					{%endfor%}
-				</p>
+        <p>
+            {% for property in channel.properties %}
+                <span class="property">
+                    {{ property.title }}
+                </span>
+            {% endfor %}
+        </p>
 
-				{% if channel.description < 20 %}
-					<b>ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!</b>
-				{% endif %}
-			</p>
-			<p>{{ channel.description | raw }}</p>
-		</div>
-	{% endfor %}
-{% endblock %}
+        {% if channel.description < 20 %}
+            <b>
+                ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!
+                                                                                                                                                                                                            
+                                                                                                                                                                                            
+                                                                                                                                                                            
+                                                                                                                                                            
+                                                                                                                                            
+                                                                                                                            
+                                                                                                            
+                                                                                            
+                                                                            
+                                                            
+                                            
+                            
+            </b>
+        {% endif %}
+    </p>
+    <p>
+        {{ channel.description | raw }}
+    </p>
+</div>{% endfor %}{% endblock %}

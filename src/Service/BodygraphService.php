@@ -59,7 +59,7 @@ class BodygraphService
      * @param CenterRepository $centerRepository
      */
 
-     //protected SwissEphemeris $sweph;
+    //protected SwissEphemeris $sweph;
     public function __construct(EntityManagerInterface $entityManager, BodygraphRepository $bodygraphRepository, ChannelRepository $channelRepository, CenterRepository $centerRepository, IncarnationCrossRepository $incarnationCrossRepository)
     {
         $this->bodygraphRepository = $bodygraphRepository;
@@ -143,12 +143,11 @@ class BodygraphService
             }
 
 
-            if($centerStatusNew){
+            if ($centerStatusNew) {
                 $bodygraph->addCenterStatus($centerStatus);
                 $this->entityManager->getRepository(CenterStatus::class)->add($centerStatus);
-                
             }
-      
+
             $this->entityManager->flush();
         }
     }
@@ -227,7 +226,7 @@ class BodygraphService
             $gates = $channel->getGates();
             foreach ($gates as $gate) {
                 $gateChannel = $gate->getChannels();
-             dump($gateChannel);
+                dump($gateChannel);
             }
 
             if ($channel->getCenter()->getIdentifier() === Center::THROAT) {
@@ -238,4 +237,15 @@ class BodygraphService
         }
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param Bodygraph $bodygraph
+     * @return void
+     */
+    public function calcUrlHash(Bodygraph $bodygraph)
+    {
+        $hash = $bodygraph->getId();
+        $bodygraph->setUrlHash(md5($hash));
+    }
 }

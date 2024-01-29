@@ -24,7 +24,9 @@ Encore
   .addEntry("css/main", "./assets/scss/main.scss")
   .addEntry("css/admin", "./assets/scss/rainbow-revolution.scss")
   .addEntry("js/autoTOC", "./assets/js/autoTOC.js")
-  .addEntry("js/bodygraph", "./assets/js/bodygraph.js")
+  .addEntry("js/scroll-indicator", "./assets/js/scroll-indicator.js")
+  .addEntry("js/report-menu", "./assets/js/report-menu.js")
+  .addEntry("js/external-report", "./assets/js/external-report.js")
 
   // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
   //.enableStimulusBridge('./assets/controllers.json')

@@ -1,6 +1,9 @@
-{% set customStylesheet = 'build/css/' ~  bodygraph.user.username ~ '.css' %}
+{% if bodygraph.user and bodygraph.user.username %}
+    {% set customStylesheet = 'build/css/' ~  bodygraph.user.username ~ '.css' %}
+    <link href="{{ asset(customStylesheet) }}" rel="stylesheet" />
+{% endif %}
 
-<link href="{{ asset(customStylesheet) }}" rel="stylesheet" />
+{% include 'bodygraph/_partials/_toc-menu.html.twig' with { bodygraph: bodygraph } %}
 
 {% include 'bodygraph/_partials/01_general.html.twig' with { bodygraph: bodygraph } %}
 

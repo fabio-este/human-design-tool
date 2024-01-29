@@ -1,0 +1,22 @@
+{% block content_footer_wrapper '' %}
+
+{% block stylesheets %}
+    {% if bodygraph.user and bodygraph.user.username %}
+        {% set customStylesheet = 'build/css/' ~  bodygraph.user.username ~ '.css' %}
+        <link href="{{ asset(customStylesheet) }}" rel="stylesheet" />
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{{ encore_entry_script_tags('js/external-report') }}
+
+{% endblock %}
+
+{% block body %}
+    {% block main %}
+        <div class="external-report" id="reportDisplay">
+            {% include 'bodygraph/_partials/_report-external.html.twig' with { bodygraph: bodygraph } %}
+        </div>
+    {% endblock %}
+{% endblock %}

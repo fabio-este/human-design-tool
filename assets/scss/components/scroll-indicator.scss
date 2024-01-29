@@ -1,0 +1,28 @@
+/* The progress container (grey background) */
+.progress-container {
+  z-index: 999;
+  width: 100%;
+  height: 2px;
+  background: transparent;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+}
+
+/* The progress bar (scroll indicator) */
+.progress-bar {
+  box-shadow: -2px 0 10px 4px #000;
+  height: 2px;
+  background-image: radial-gradient(
+    circle,
+    #ad0440 0%,
+    #532671 16%,
+    #069fb4 32%,
+    #4aa421 50%,
+    #ffb802 68%,
+    #fc6c03 83%,
+    #de0c3a 100%
+  ) !important;
+  background-size: 100vw;
+  width: 0%;
+}

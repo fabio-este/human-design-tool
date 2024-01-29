@@ -1,89 +1,178 @@
 {% block centers %}
 
-	<h1>Ebene 2: Die neun Juwelen</h1>
+    <h1 id="centers">
+        Ebene 2: Die neun Juwelen
+                        
+                    
+            
+    </h1>
 
-	<h4>Allgemein</h4>
-	<p>Die Zentren im Human Design System sind vom indischen Chakren System abgeleitet, allerdings wurden das
-		        Solarplexus Chakra und das Herz Chakra im Human Design in je zwei Zentren gesplittet.
-		        Jedes der Zentren kann entweder definiert werden (wenn ein Kanal mit ihm verbunden ist), undefiniert
-		        (kein
-		        Kanal ist mit ihm verbunden, aber mindestens ein hängendes Tor) oder offen (kein Kanal, kein Tor) sein.</p>
-	<p>
+    <h4>
+        Allgemein
+                    
+            
+    </h4>
+    <p>
+        Die Zentren im Human Design System sind vom indischen Chakren System abgeleitet, allerdings wurden das
+                        		        Solarplexus Chakra und das Herz Chakra im Human Design in je zwei Zentren gesplittet.
+                        		        Jedes der Zentren kann entweder definiert werden (wenn ein Kanal mit ihm verbunden ist), undefiniert
+                        		        (kein
+                        		        Kanal ist mit ihm verbunden, aber mindestens ein hängendes Tor) oder offen (kein Kanal, kein Tor) sein.
+                    
+            
+    </p>
+    <p>
 
-		<h4>Definierte Zentren</h4>
-	</p>
-	<p>Definierte Zentren haben einen eher beständigen und stabilen Energie-Fluss, der eher sendend wirkt und
-		        weniger anfällig für äußere Einflüsse ist.</p>
+        <h4>
+            Definierte Zentren
+                                
+                    
+        </h4>
+    </p>
+    <p>
+        Definierte Zentren haben einen eher beständigen und stabilen Energie-Fluss, der eher sendend wirkt und
+                        		        weniger anfällig für äußere Einflüsse ist.
+                    
+            
+    </p>
 
-	<h4>Undefinierte und offene Zentren</h4>
-	<p>Ein Zentrum ist undefiniert, wenn es keine aktivierten Kanäle hat und offen, wenn es keine aktivierten
-		        Tore
-		        hat. Diese Zentren haben einen weniger stabilen und unbeständigen Energie-Fluss und sind daher eher
-		        empfänglich für äußere Energien und Einflüsse.</p>
-	<p>Wenn diese äußeren Energien in ein Zentrum gelangen, befinden sich Fremdenergien in deinem Energiesystem
-		        und
-		        wir können in die so genannten Nicht-Selbst-Themen abrutschen, in denen wir nicht mehr in unserer wahren
-		        Natur sind und agieren.</p>
-	<p>Ein sehr guter Anhaltspunkt, um diese Fremd-/Nicht-Selbst-Themen zu erkennen, ist der Zwang. Wenn ich
-		        etwas
-		        aus einem Zwang heraus tue, tue ich es nicht aus mir selbst / meiner wahren Natur heraus, sondern als
-		        eine
-		        zwanghafte, konditionierte Reaktion.</p>
-	<p>In jedem offenen oder undefinierten Zentrum ist es sehr wichtig, bewusst zu prüfen, was wir
-		        fühlen/erleben
-		        und zu fragen: "Ist das meins oder kann das weg?".</p>
-	<p>Auch wenn es sich offene und undefinierte Zentren jetzt wie ein Nachteil anhören mögen, bieten uns diese
-		        Zentren die größten Entwicklungspotenziale, da wir durch bewusste Beobachtung lernen können, die fremden
-		        Energien nicht in unser System zu lassen und so durch Bewusstsein-”Arbeit” zu unserer wahren Natur
-		        zurückzukehren.</p>
+    <h4>
+        Undefinierte und offene Zentren
+                    
+            
+    </h4>
+    <p>
+        Ein Zentrum ist undefiniert, wenn es keine aktivierten Kanäle hat und offen, wenn es keine aktivierten
+                        		        Tore
+                        		        hat. Diese Zentren haben einen weniger stabilen und unbeständigen Energie-Fluss und sind daher eher
+                        		        empfänglich für äußere Energien und Einflüsse.
+                    
+            
+    </p>
+    <p>
+        Wenn diese äußeren Energien in ein Zentrum gelangen, befinden sich Fremdenergien in deinem Energiesystem
+                        		        und
+                        		        wir können in die so genannten Nicht-Selbst-Themen abrutschen, in denen wir nicht mehr in unserer wahren
+                        		        Natur sind und agieren.
+                    
+            
+    </p>
+    <p>
+        Ein sehr guter Anhaltspunkt, um diese Fremd-/Nicht-Selbst-Themen zu erkennen, ist der Zwang. Wenn ich
+                        		        etwas
+                        		        aus einem Zwang heraus tue, tue ich es nicht aus mir selbst / meiner wahren Natur heraus, sondern als
+                        		        eine
+                        		        zwanghafte, konditionierte Reaktion.
+                    
+            
+    </p>
+    <p>
+        In jedem offenen oder undefinierten Zentrum ist es sehr wichtig, bewusst zu prüfen, was wir
+                        		        fühlen/erleben
+                        		        und zu fragen: "Ist das meins oder kann das weg?".
+                    
+            
+    </p>
+    <p>
+        Auch wenn es sich offene und undefinierte Zentren jetzt wie ein Nachteil anhören mögen, bieten uns diese
+                        		        Zentren die größten Entwicklungspotenziale, da wir durch bewusste Beobachtung lernen können, die fremden
+                        		        Energien nicht in unser System zu lassen und so durch Bewusstsein-”Arbeit” zu unserer wahren Natur
+                        		        zurückzukehren.
+                    
+            
+    </p>
 
-	{% for centerStatus in bodygraph.centerStatuses %}
+    {% for centerStatus in bodygraph.centerStatuses %}
 
-		{% set center = centerStatus.center %}
+        {% set center = centerStatus.center %}
 
-		<div class="page-break"></div>
-		<div class="center">
+        <div class="page-break"></div>
+        <div class="center">
 
-			<h2>{{ center.title }} - {{ center.subtitle }}</h2>
+            <h2>
+                {{ center.title }}
+                - 
+                                                
+                                
+                {{ center.subtitle }}
+            </h2>
 
-			<p> Themen: {{ center.themes }}</p>
+            <p>
+                Themen: 
+                                                
+                                
+                {{ center.themes }}
+            </p>
 
-			<p> Typ: {{ center.typeAsString }}</p>
+            <p>
+                Typ: 
+                                                
+                                
+                {{ center.typeAsString }}
+            </p>
 
-			<p> Biologische Entsprechung: {{ center.biological }}</p>
+            <p>
+                Biologische Entsprechung: 
+                                                
+                                
+                {{ center.biological }}
+            </p>
 
-			{{ center.description | raw }}
+            {{ center.description | raw }}
 
-			{% if centerStatus.status == 'DEFINED' %}
-				{% if center.descriptionDefined|length < 20 %}
-					<b>ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!</b>
-				{% endif %}
+            {% if centerStatus.status == 'DEFINED' %}
+                {% if center.descriptionDefined|length < 20 %}
+                    <b>
+                        ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!
+                                                                    
+                                            
+                    </b>
+                {% endif %}
 
-				<p>{{ center.descriptionDefined | raw }}</p>
-			{% endif %}
+                <p>
+                    {{ center.descriptionDefined | raw }}
+                </p>
+            {% endif %}
 
-			{% if centerStatus.status == 'UNDEFINED' %}
-				{% if center.descriptionUndefined|length < 20 %}
-					<b>ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!</b>
-				{% endif %}
-				<p>{{ center.descriptionUndefined | raw }}</p>
-			{% endif %}
+            {% if centerStatus.status == 'UNDEFINED' %}
+                {% if center.descriptionUndefined|length < 20 %}
+                    <b>
+                        ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!
+                                                                    
+                                            
+                    </b>
+                {% endif %}
+                <p>
+                    {{ center.descriptionUndefined | raw }}
+                </p>
+            {% endif %}
 
-			{% if centerStatus.status == 'OPEN' %}
-				{% if center.descriptionOpen|length < 20 %}
-					<b>ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!</b>
-				{% endif %}
-				<p>{{ center.descriptionOpen | raw }}</p>
-			{% endif %}
+            {% if centerStatus.status == 'OPEN' %}
+                {% if center.descriptionOpen|length < 20 %}
+                    <b>
+                        ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!
+                                                                    
+                                            
+                    </b>
+                {% endif %}
+                <p>
+                    {{ center.descriptionOpen | raw }}
+                </p>
+            {% endif %}
 
-			{% if centerStatus.status != 'DEFINED' %}
-				{% if center.notSelf|length < 20 %}
-					<b>ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!</b>
-				{% endif %}
-				<p>
-					{{ center.notSelf | raw }}</p>
-			{% endif %}
-		</div>
-	{% endfor %}
+            {% if centerStatus.status != 'DEFINED' %}
+                {% if center.notSelf|length < 20 %}
+                    <b>
+                        ACHTUNG BESCHREIBUNG UNVOLLSTÄNDIG!
+                                                                    
+                                            
+                    </b>
+                {% endif %}
+                <p>
+                    {{ center.notSelf | raw }}
+                </p>
+            {% endif %}
+        </div>
+    {% endfor %}
 
 {% endblock %}

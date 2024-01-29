@@ -104,7 +104,7 @@ class Bodygraph
      * @ORM\ManyToOne(targetEntity=Gate::class)
      */
     private $plutoDesign;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity=Gate::class)
      */
@@ -181,7 +181,7 @@ class Bodygraph
     private $channels;
 
     /**
-     * @ORM\OneToMany(targetEntity=CenterStatus::class, mappedBy="bodygraph")
+     * @ORM\OneToMany(targetEntity=CenterStatus::class, mappedBy="bodygraph", cascade={"remove"})
      */
     private $centerStatuses;
 
@@ -216,132 +216,132 @@ class Bodygraph
     private $gateActivations;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $sunDesignLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $earthDesignLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $northNodeDesignLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $southNodeDesignLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $moonDesignLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $mercuryDesignLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $venusDesignLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $marsDesignLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $jupiterDesignLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $saturnDesignLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $uranusDesignLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $neptuneDesignLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $plutoDesignLine;
-    
+
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $sunPersonalityLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $earthPersonalityLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $northNodePersonalityLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $southNodePersonalityLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $moonPersonalityLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $mercuryPersonalityLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $venusPersonalityLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $marsPersonalityLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $jupiterPersonalityLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $saturnPersonalityLine;
 
-        /**
-     * @ORM\Column(type="integer")
+    /**
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $uranusPersonalityLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $neptunePersonalityLine;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $plutoPersonalityLine;
 
@@ -360,6 +360,16 @@ class Bodygraph
      */
     private $claimedByUser;
 
+    /**
+     * @ORM\Column(type="string", length=1024, nullable=true)
+     */
+    private $urlHash;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $public;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -369,7 +379,8 @@ class Bodygraph
         $this->teamPentas = new ArrayCollection();
     }
 
-    public function __toString(){
+    public function __toString()
+    {
         return $this->getId() . ' | ' . $this->getName();
     }
 
@@ -770,10 +781,10 @@ class Bodygraph
     public function getGates(): array
     {
         $gates = $this->getGatesByPosition();
-       
-        $gatesByNumber=[];
-        foreach ($gates as $gate){
-            if($gate instanceof Gate){
+
+        $gatesByNumber = [];
+        foreach ($gates as $gate) {
+            if ($gate instanceof Gate) {
                 $gatesByNumber[$gate->getId()] = $gate;
             }
         }
@@ -788,7 +799,7 @@ class Bodygraph
     {
         $gateCollection = new ArrayCollection();
         $gates = $this->getGatesByPosition();
-        foreach ($gates as $gate){
+        foreach ($gates as $gate) {
             $gateCollection->add($gate);
         }
 
@@ -855,11 +866,12 @@ class Bodygraph
 
         return $this;
     }
-    public function getHasGate($number):bool{
+    public function getHasGate($number): bool
+    {
         $gates = $this->getGates();
 
-        foreach($gates as $gate){
-            if($gate->getId() === $number){
+        foreach ($gates as $gate) {
+            if ($gate->getId() === $number) {
                 return TRUE;
             }
         }
@@ -877,7 +889,7 @@ class Bodygraph
 
         foreach ($allChannels as $channel) {
 
-            if($channel->getGateA()->getCenter()[0] === $center || $channel->getGateB()->getCenter()[0] === $center){
+            if ($channel->getGateA()->getCenter()[0] === $center || $channel->getGateB()->getCenter()[0] === $center) {
                 $centerChannels->add($channel);
             }
         }
@@ -922,9 +934,10 @@ class Bodygraph
     }
 
 
-    public function getCenterStatusByCenter($center){
-        foreach ($this->getCenterStatuses() as $centerStatus){
-            if($centerStatus->getCenter() === $center){
+    public function getCenterStatusByCenter($center)
+    {
+        foreach ($this->getCenterStatuses() as $centerStatus) {
+            if ($centerStatus->getCenter() === $center) {
                 return $centerStatus;
             }
         }
@@ -1027,7 +1040,7 @@ class Bodygraph
         return $this->sunDesignLine;
     }
 
-    public function setSunDesignLine(int $sunDesignLine): self
+    public function setSunDesignLine(?int $sunDesignLine): self
     {
         $this->sunDesignLine = $sunDesignLine;
 
@@ -1039,7 +1052,7 @@ class Bodygraph
         return $this->earthDesignLine;
     }
 
-    public function setEarthDesignLine(int $earthDesignLine): self
+    public function setEarthDesignLine(?int $earthDesignLine): self
     {
         $this->earthDesignLine = $earthDesignLine;
 
@@ -1051,7 +1064,7 @@ class Bodygraph
         return $this->northNodeDesignLine;
     }
 
-    public function setNorthNodeDesignLine(int $northNodeDesignLine): self
+    public function setNorthNodeDesignLine(?int $northNodeDesignLine): self
     {
         $this->northNodeDesignLine = $northNodeDesignLine;
 
@@ -1063,7 +1076,7 @@ class Bodygraph
         return $this->southNodeDesignLine;
     }
 
-    public function setSouthNodeDesignLine(int $southNodeDesignLine): self
+    public function setSouthNodeDesignLine(?int $southNodeDesignLine): self
     {
         $this->southNodeDesignLine = $southNodeDesignLine;
 
@@ -1075,7 +1088,7 @@ class Bodygraph
         return $this->moonDesignLine;
     }
 
-    public function setMoonDesignLine(int $moonDesignLine): self
+    public function setMoonDesignLine(?int $moonDesignLine): self
     {
         $this->moonDesignLine = $moonDesignLine;
 
@@ -1087,7 +1100,7 @@ class Bodygraph
         return $this->mercuryDesignLine;
     }
 
-    public function setMercuryDesignLine(int $mercuryDesignLine): self
+    public function setMercuryDesignLine(?int $mercuryDesignLine): self
     {
         $this->mercuryDesignLine = $mercuryDesignLine;
 
@@ -1099,7 +1112,7 @@ class Bodygraph
         return $this->venusDesignLine;
     }
 
-    public function setVenusDesignLine(int $venusDesignLine): self
+    public function setVenusDesignLine(?int $venusDesignLine): self
     {
         $this->venusDesignLine = $venusDesignLine;
 
@@ -1111,7 +1124,7 @@ class Bodygraph
         return $this->marsDesignLine;
     }
 
-    public function setMarsDesignLine(int $marsDesignLine): self
+    public function setMarsDesignLine(?int $marsDesignLine): self
     {
         $this->marsDesignLine = $marsDesignLine;
 
@@ -1123,7 +1136,7 @@ class Bodygraph
         return $this->jupiterDesignLine;
     }
 
-    public function setJupiterDesignLine(int $jupiterDesignLine): self
+    public function setJupiterDesignLine(?int $jupiterDesignLine): self
     {
         $this->jupiterDesignLine = $jupiterDesignLine;
 
@@ -1135,7 +1148,7 @@ class Bodygraph
         return $this->saturnDesignLine;
     }
 
-    public function setSaturnDesignLine(int $saturnDesignLine): self
+    public function setSaturnDesignLine(?int $saturnDesignLine): self
     {
         $this->saturnDesignLine = $saturnDesignLine;
 
@@ -1147,7 +1160,7 @@ class Bodygraph
         return $this->uranusDesignLine;
     }
 
-    public function setUranusDesignLine(int $uranusDesignLine): self
+    public function setUranusDesignLine(?int $uranusDesignLine): self
     {
         $this->uranusDesignLine = $uranusDesignLine;
 
@@ -1160,7 +1173,7 @@ class Bodygraph
         return $this->neptuneDesignLine;
     }
 
-    public function setNeptuneDesignLine(int $neptuneDesignLine): self
+    public function setNeptuneDesignLine(?int $neptuneDesignLine): self
     {
         $this->neptuneDesignLine = $neptuneDesignLine;
 
@@ -1172,20 +1185,20 @@ class Bodygraph
         return $this->plutoDesignLine;
     }
 
-    public function setPlutoDesignLine(int $plutoDesignLine): self
+    public function setPlutoDesignLine(?int $plutoDesignLine): self
     {
         $this->plutoDesignLine = $plutoDesignLine;
 
         return $this;
     }
 
-    
+
     public function getSunPersonalityLine(): ?int
     {
         return $this->sunPersonalityLine;
     }
 
-    public function setSunPersonalityLine(int $sunPersonalityLine): self
+    public function setSunPersonalityLine(?int $sunPersonalityLine): self
     {
         $this->sunPersonalityLine = $sunPersonalityLine;
 
@@ -1197,7 +1210,7 @@ class Bodygraph
         return $this->earthPersonalityLine;
     }
 
-    public function setEarthPersonalityLine(int $earthPersonalityLine): self
+    public function setEarthPersonalityLine(?int $earthPersonalityLine): self
     {
         $this->earthPersonalityLine = $earthPersonalityLine;
 
@@ -1209,7 +1222,7 @@ class Bodygraph
         return $this->northNodePersonalityLine;
     }
 
-    public function setNorthNodePersonalityLine(int $northNodePersonalityLine): self
+    public function setNorthNodePersonalityLine(?int $northNodePersonalityLine): self
     {
         $this->northNodePersonalityLine = $northNodePersonalityLine;
 
@@ -1221,7 +1234,7 @@ class Bodygraph
         return $this->southNodePersonalityLine;
     }
 
-    public function setSouthNodePersonalityLine(int $southNodePersonalityLine): self
+    public function setSouthNodePersonalityLine(?int $southNodePersonalityLine): self
     {
         $this->southNodePersonalityLine = $southNodePersonalityLine;
 
@@ -1233,7 +1246,7 @@ class Bodygraph
         return $this->moonPersonalityLine;
     }
 
-    public function setMoonPersonalityLine(int $moonPersonalityLine): self
+    public function setMoonPersonalityLine(?int $moonPersonalityLine): self
     {
         $this->moonPersonalityLine = $moonPersonalityLine;
 
@@ -1245,7 +1258,7 @@ class Bodygraph
         return $this->mercuryPersonalityLine;
     }
 
-    public function setMercuryPersonalityLine(int $mercuryPersonalityLine): self
+    public function setMercuryPersonalityLine(?int $mercuryPersonalityLine): self
     {
         $this->mercuryPersonalityLine = $mercuryPersonalityLine;
 
@@ -1257,7 +1270,7 @@ class Bodygraph
         return $this->venusPersonalityLine;
     }
 
-    public function setVenusPersonalityLine(int $venusPersonalityLine): self
+    public function setVenusPersonalityLine(?int $venusPersonalityLine): self
     {
         $this->venusPersonalityLine = $venusPersonalityLine;
 
@@ -1269,7 +1282,7 @@ class Bodygraph
         return $this->marsPersonalityLine;
     }
 
-    public function setMarsPersonalityLine(int $marsPersonalityLine): self
+    public function setMarsPersonalityLine(?int $marsPersonalityLine): self
     {
         $this->marsPersonalityLine = $marsPersonalityLine;
 
@@ -1281,7 +1294,7 @@ class Bodygraph
         return $this->jupiterPersonalityLine;
     }
 
-    public function setJupiterPersonalityLine(int $jupiterPersonalityLine): self
+    public function setJupiterPersonalityLine(?int $jupiterPersonalityLine): self
     {
         $this->jupiterPersonalityLine = $jupiterPersonalityLine;
 
@@ -1293,7 +1306,7 @@ class Bodygraph
         return $this->saturnPersonalityLine;
     }
 
-    public function setSaturnPersonalityLine(int $saturnPersonalityLine): self
+    public function setSaturnPersonalityLine(?int $saturnPersonalityLine): self
     {
         $this->saturnPersonalityLine = $saturnPersonalityLine;
 
@@ -1305,7 +1318,7 @@ class Bodygraph
         return $this->uranusPersonalityLine;
     }
 
-    public function setUranusPersonalityLine(int $uranusPersonalityLine): self
+    public function setUranusPersonalityLine(?int $uranusPersonalityLine): self
     {
         $this->uranusPersonalityLine = $uranusPersonalityLine;
 
@@ -1318,7 +1331,7 @@ class Bodygraph
         return $this->neptunePersonalityLine;
     }
 
-    public function setNeptunePersonalityLine(int $neptunePersonalityLine): self
+    public function setNeptunePersonalityLine(?int $neptunePersonalityLine): self
     {
         $this->neptunePersonalityLine = $neptunePersonalityLine;
 
@@ -1330,7 +1343,7 @@ class Bodygraph
         return $this->plutoPersonalityLine;
     }
 
-    public function setPlutoPersonalityLine(int $plutoPersonalityLine): self
+    public function setPlutoPersonalityLine(?int $plutoPersonalityLine): self
     {
         $this->plutoPersonalityLine = $plutoPersonalityLine;
 
@@ -1384,6 +1397,30 @@ class Bodygraph
     public function setClaimedByUser(?User $claimedByUser): self
     {
         $this->claimedByUser = $claimedByUser;
+
+        return $this;
+    }
+
+    public function getUrlHash(): ?string
+    {
+        return $this->urlHash;
+    }
+
+    public function setUrlHash(?string $urlHash): self
+    {
+        $this->urlHash = $urlHash;
+
+        return $this;
+    }
+
+    public function isPublic(): ?bool
+    {
+        return $this->public;
+    }
+
+    public function setPublic(bool $public): self
+    {
+        $this->public = $public;
 
         return $this;
     }

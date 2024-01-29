@@ -11,7 +11,6 @@ use App\Repository\ChannelRepository;
 use App\Service\BodygraphService;
 use App\Service\TeamPentaService;
 use App\Service\User\IndexFilterService;
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
@@ -34,7 +33,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
-
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
 class BodygraphCrudController extends AbstractCrudController
@@ -49,10 +48,13 @@ class BodygraphCrudController extends AbstractCrudController
 
     protected CelestialBodyRepository $celestialBodiesRepository;
 
+    protected BodygraphRepository $bodygraphRepository;
+
     /**
      * @param ChannelRepository $channelRepository
      * @param BodygraphService $bodygraphService
      * @param CelestialBodyRepository $celestialBodiesRepository
+     * @param Bodygraph $bodygraphRepository
      * @param TeamPentaService $teamPentaService
      */
     public function __construct(
@@ -60,13 +62,15 @@ class BodygraphCrudController extends AbstractCrudController
         BodygraphService $bodygraphService,
         CelestialBodyRepository $celestialBodiesRepository,
         TeamPentaService $teamPentaService,
-        IndexFilterService $indexFilterService
+        IndexFilterService $indexFilterService,
+        BodygraphRepository $bodygraphRepository
     ) {
         $this->channelRepository = $channelRepository;
         $this->bodygraphService = $bodygraphService;
         $this->teamPentaService = $teamPentaService;
         $this->indexFilterService = $indexFilterService;
         $this->celestialBodiesRepository = $celestialBodiesRepository;
+        $this->bodygraphRepository = $bodygraphRepository;
     }
 
     /**
@@ -99,6 +103,7 @@ class BodygraphCrudController extends AbstractCrudController
             yield ChoiceField::new($celestialBody . 'DesignLine')
                 ->setColumns('col-md-2')
                 ->hideOnIndex()
+                ->setRequired(FALSE)
                 ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]);
             yield AssociationField::new($celestialBody . 'Personality')
                 ->addCssClass('celestial-body-field celestial-body-field-' . $celestialBody)
@@ -108,6 +113,7 @@ class BodygraphCrudController extends AbstractCrudController
             yield ChoiceField::new($celestialBody . 'PersonalityLine')
                 ->setColumns('col-md-2')
                 ->hideOnIndex()
+                ->setRequired(FALSE)
                 ->setChoices([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6]);
         }
 
@@ -120,10 +126,12 @@ class BodygraphCrudController extends AbstractCrudController
             ->setColumns('col-md-4');
         yield AssociationField::new('tags')->setColumns('col-md-4');
         yield AssociationField::new('user')->setPermission('ROLE_ADMIN')->setColumns('col-md-4');
-        yield AssociationField::new('claimedByUser')->setRequired(FALSE);
+        yield AssociationField::new('claimedByUser')->setRequired(FALSE)->setColumns('col-md-6');
+        yield TextField::new('urlHash')->hideOnIndex()->setRequired(FALSE)->setDisabled()->setColumns('col-md-6');
     }
 
     /**
+     * @Route("/report", name="report")
      * @param AdminContext $context
      * @return Response+
      */
@@ -139,6 +147,21 @@ class BodygraphCrudController extends AbstractCrudController
         ]);
     }
 
+    /**
+     * @Route("/report/{hash}", name="report_external")
+     * @return Response+
+     */
+    public function displayReportExternalAction(string $hash)
+    {
+        $bodygraph = $this->bodygraphRepository->findOneByUrlHash($hash);
+        $bodygraphImage = $this->imageToBase64($this->getParameter('kernel.project_dir') . '/public/img/graphs/' . $bodygraph->getImage());
+
+        return $this->render('bodygraph/displayReportExternal.html.twig', [
+            'bodygraph' => $bodygraph,
+            'bodygraphImage' => $bodygraphImage,
+            'celestialBodies' => $this->celestialBodiesRepository->getCelestialBodiesByIdentifier()
+        ]);
+    }
 
     /**
      * @param AdminContext $context
@@ -199,6 +222,11 @@ class BodygraphCrudController extends AbstractCrudController
             $gateActivation->setMode(CelestialBody::activationModePersonality);
         }
 
+
+        if ($bodygraph->getUrlHash() === NULL) {
+            $this->bodygraphService->calcUrlHash($bodygraph);
+        }
+
         return $bodygraph;
     }
 
@@ -230,6 +258,11 @@ class BodygraphCrudController extends AbstractCrudController
         if ($bodygraph instanceof Bodygraph) {
             $this->bodygraphService->processBodygraph($bodygraph);
         }
+
+        if ($bodygraph->getUrlHash() === NULL) {
+            $this->bodygraphService->calcUrlHash($bodygraph);
+        }
+
         parent::updateEntity($entityManager, $bodygraph);
     }
 
@@ -243,8 +276,13 @@ class BodygraphCrudController extends AbstractCrudController
         if ($bodygraph instanceof Bodygraph) {
             $this->bodygraphService->processBodygraph($bodygraph);
         }
+        if ($bodygraph->getUrlHash() === '') {
+            $this->bodygraphService->calcUrlHash($bodygraph);
+        }
         parent::persistEntity($entityManager, $bodygraph);
     }
+
+
 
     /**
      * @param Actions $actions
@@ -255,6 +293,9 @@ class BodygraphCrudController extends AbstractCrudController
         $displayReport = Action::new('displayReport', '', 'fa fa-file')
             ->linkToCrudAction('displayReportAction');
 
+        $displayReportExternal = Action::new('displayReportExternal', '', 'fas fa-file-export')
+            ->linkToRoute('report_external', fn (Bodygraph $entity) => ['hash' => $entity->getUrlHash()]);
+
         $displayTeamPenta = Action::new('displayTeamPenta', '', 'fa fa-users')
             ->linkToCrudAction('displayTeamPentaAction')
             ->addCssClass('btn btn-primary');
@@ -263,6 +304,9 @@ class BodygraphCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $displayReport)
             ->add(Crud::PAGE_EDIT, $displayReport)
             ->add(Crud::PAGE_INDEX, $displayReport)
+            ->add(Crud::PAGE_DETAIL, $displayReportExternal)
+            ->add(Crud::PAGE_EDIT, $displayReportExternal)
+            ->add(Crud::PAGE_INDEX, $displayReportExternal)
             ->addBatchAction($displayTeamPenta);
     }
 
@@ -274,15 +318,5 @@ class BodygraphCrudController extends AbstractCrudController
     {
         return $crud
             ->showEntityActionsInlined();
-    }
-
-    /**
-     * @param Assets $assets
-     * 
-     * @return Assets
-     */
-    public function configureAssets(Assets $assets): Assets
-    {
-        return $assets->addWebpackEncoreEntry('js/bodygraph');
     }
 }
