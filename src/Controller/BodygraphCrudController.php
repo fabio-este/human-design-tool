@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\Bodygraph;
 use App\Entity\CelestialBody;
 use App\Entity\GateActivation;
+use App\Form\BirthplaceField;
 use App\Repository\BodygraphRepository;
 use App\Repository\CelestialBodyRepository;
 use App\Repository\ChannelRepository;
 use App\Service\BodygraphService;
+use App\Service\HDAPIService;
 use App\Service\TeamPentaService;
 use App\Service\User\IndexFilterService;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -33,8 +35,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class BodygraphCrudController extends AbstractCrudController
 {
@@ -50,12 +55,16 @@ class BodygraphCrudController extends AbstractCrudController
 
     protected BodygraphRepository $bodygraphRepository;
 
+    protected HDAPIService $api;
+    protected HttpClientInterface $client;
+
     /**
      * @param ChannelRepository $channelRepository
      * @param BodygraphService $bodygraphService
      * @param CelestialBodyRepository $celestialBodiesRepository
      * @param Bodygraph $bodygraphRepository
      * @param TeamPentaService $teamPentaService
+     * @param HDAPIService $api
      */
     public function __construct(
         ChannelRepository $channelRepository,
@@ -63,7 +72,9 @@ class BodygraphCrudController extends AbstractCrudController
         CelestialBodyRepository $celestialBodiesRepository,
         TeamPentaService $teamPentaService,
         IndexFilterService $indexFilterService,
-        BodygraphRepository $bodygraphRepository
+        BodygraphRepository $bodygraphRepository,
+        HDAPIService $api,
+        HttpClientInterface $client
     ) {
         $this->channelRepository = $channelRepository;
         $this->bodygraphService = $bodygraphService;
@@ -71,6 +82,8 @@ class BodygraphCrudController extends AbstractCrudController
         $this->indexFilterService = $indexFilterService;
         $this->celestialBodiesRepository = $celestialBodiesRepository;
         $this->bodygraphRepository = $bodygraphRepository;
+        $this->api = $api;
+        $this->client = $client;
     }
 
     /**
@@ -89,7 +102,7 @@ class BodygraphCrudController extends AbstractCrudController
     {
         //@todo rewrite to yield and make array $celestialBodies = ['sun', 'earth', ...]
         yield TextField::new('name')->setColumns('col-md-3');
-        yield TextField::new('birthplace')->setColumns('col-md-3');
+        yield BirthplaceField::new('birthplace')->setColumns('col-md-3');
         yield DateField::new('birthdate')->setColumns('col-md-3');
         yield TimeField::new('birthtime')->setColumns('col-md-3');
 
@@ -147,6 +160,7 @@ class BodygraphCrudController extends AbstractCrudController
         ]);
     }
 
+
     /**
      * @Route("/report/{hash}", name="report_external")
      * @return Response+
@@ -186,6 +200,25 @@ class BodygraphCrudController extends AbstractCrudController
         ]);
     }
 
+    /**
+     * @Route("/api/birthplace/search/", methods="GET", name="api_birthplace_search")
+     */
+    public function birthplaceSearch(Request $request)
+    {
+
+        $query = $request->query->get('q');
+
+        $results = $this->api->findTimezoneCall($query);
+
+    
+        $response = new Response(
+            json_encode($results),
+            Response::HTTP_OK,
+            ['content-type' => 'application/json']
+        );
+
+        $response->send();
+    }
 
     /**
      * @param string $path
@@ -318,5 +351,10 @@ class BodygraphCrudController extends AbstractCrudController
     {
         return $crud
             ->showEntityActionsInlined();
+    }
+    public function configureAssets(Assets $assets): Assets
+    {
+        return $assets
+            ->addWebpackEncoreEntry('js/birthplace-autosuggest');
     }
 }

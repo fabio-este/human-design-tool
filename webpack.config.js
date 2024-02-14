@@ -27,6 +27,7 @@ Encore
   .addEntry("js/scroll-indicator", "./assets/js/scroll-indicator.js")
   .addEntry("js/report-menu", "./assets/js/report-menu.js")
   .addEntry("js/external-report", "./assets/js/external-report.js")
+  .addEntry("js/birthplace-autosuggest", "./assets/js/birthplace-autosuggest.js")
 
   // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
   //.enableStimulusBridge('./assets/controllers.json')
