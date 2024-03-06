@@ -178,6 +178,22 @@ class BodygraphCrudController extends AbstractCrudController
     }
 
     /**
+     * @Route("/cheatsheet/{hash}", name="cheatsheet")
+     * @return Response+
+     */
+    public function displayCheatsheetAction(string $hash)
+    {
+        $bodygraph = $this->bodygraphRepository->findOneByUrlHash($hash);
+        $bodygraphImage = $this->imageToBase64($this->getParameter('kernel.project_dir') . '/public/img/graphs/' . $bodygraph->getImage());
+
+        return $this->render('bodygraph/displayReportExternal.html.twig', [
+            'bodygraph' => $bodygraph,
+            'bodygraphImage' => $bodygraphImage,
+            'celestialBodies' => $this->celestialBodiesRepository->getCelestialBodiesByIdentifier()
+        ]);
+    }
+
+    /**
      * @param AdminContext $context
      * @return Response
      */

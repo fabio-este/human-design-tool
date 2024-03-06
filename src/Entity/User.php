@@ -68,11 +68,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $tags;
 
+    /**
+     * @ORM\OneToMany(targetEntity=TextBlock::class, mappedBy="user")
+     */
+    private $textBlocks;
+
 
     public function __construct()
     {
         $this->bodygraphs = new ArrayCollection();
         $this->tags = new ArrayCollection();
+        $this->textBlocks = new ArrayCollection();
     }
 
     public function __toString()
@@ -299,6 +305,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($tag->getUser() === $this) {
                 $tag->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TextBlock>
+     */
+    public function getTextBlocks(): Collection
+    {
+        return $this->textBlocks;
+    }
+
+    public function addTextBlock(TextBlock $textBlock): self
+    {
+        if (!$this->textBlocks->contains($textBlock)) {
+            $this->textBlocks[] = $textBlock;
+            $textBlock->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTextBlock(TextBlock $textBlock): self
+    {
+        if ($this->textBlocks->removeElement($textBlock)) {
+            // set the owning side to null (unless already changed)
+            if ($textBlock->getUser() === $this) {
+                $textBlock->setUser(null);
             }
         }
 

@@ -368,7 +368,7 @@ class Bodygraph
     /**
      * @ORM\Column(type="boolean")
      */
-    private $public;
+    private $public = false;
 
     public function __construct()
     {

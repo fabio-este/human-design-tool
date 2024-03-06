@@ -1,5 +1,14 @@
 @import "_hex-grid.scss";
 
+// Required Core Stylesheet
+@import "node_modules/@glidejs/glide/src/assets/sass/glide.core";
+
+// Optional Theme Stylesheet
+@import "node_modules/@glidejs/glide/src/assets/sass/glide.theme";
+
+
+
+
 body {
   margin: 0;
 }
@@ -548,7 +557,50 @@ button.navbar-toggler {
 
 #reportDisplay.external-report {
   #menu {
-    overflow-x: scroll;
+    .glide {
+      border-radius: 0.5rem;
+      overflow: hidden;
+      .glide__slides {
+        border-radius: 0.5rem;
+        overflow: hidden;
+        .glide__slide {
+          background: #000;
+
+          display: flex;
+          justify-content: center;
+
+          button {
+            text-decoration: none;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            min-width: 6rem;
+            min-height: 9rem;
+            justify-content: center;
+            align-items: center;
+            border: none;
+
+            img.menu-icon {
+              width: 5rem;
+              height: 5rem;
+              padding: 0;
+            }
+            span {
+              color: #fff;
+              text-decoration: none;
+              padding-top: 1rem;
+              text-align: center;
+              font-weight: bold;
+              text-transform: uppercase;
+            }
+
+            &:last-child {
+              border-right: none;
+            }
+          }
+        }
+      }
+    }
     ul.layer-buttons {
       padding: 0;
       margin: 0;
@@ -556,7 +608,7 @@ button.navbar-toggler {
       list-style-type: none;
       background: #000;
       border-radius: 0.5rem;
-      li {
+      div {
         border-radius: 0.5rem;
         a {
           border-radius: 0.5rem;
@@ -584,12 +636,6 @@ button.navbar-toggler {
           }
         }
       }
-    }
-    > ul,
-    > div,
-    > div a {
-      z-index: 999;
-      position: relative;
     }
   }
 }

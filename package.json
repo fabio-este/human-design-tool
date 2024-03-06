@@ -21,9 +21,11 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "@glidejs/glide": "^3.6.0",
         "@pathscale/fonts-sansation": "^1.0.5",
         "@popperjs/core": "^2.11.8",
         "@tarekraafat/autocomplete.js": "^10.2.7",
+        "@types/glider-js": "^1.7.11",
         "autocompleter": "^9.1.2",
         "bootstrap": "^5.3.2",
         "bootstrap-autocomplete": "^2.3.7",
@@ -35,8 +37,10 @@
         "datatables.net-dt": "^1.11.4",
         "fabric": "^5.3.0",
         "fabricjs": "^1.0.0",
+        "glider-js": "^1.7.8",
         "html-table-of-contents": "^0.1.1",
         "jquery": "^3.7.1",
+        "slick-carousel": "^1.8.1",
         "typeahead.js": "^0.11.1",
         "webpack": "^5.0.0"
     }

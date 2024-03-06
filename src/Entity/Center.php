@@ -122,11 +122,17 @@ class Center
      */
     private $channels;
 
+    /**
+     * @ORM\OneToMany(targetEntity=TextBlock::class, mappedBy="Center")
+     */
+    private $textBlocks;
+
     public function __construct()
     {
         $this->gates = new ArrayCollection();
         $this->centerStatuses = new ArrayCollection();
         $this->channels = new ArrayCollection();
+        $this->textBlocks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -365,6 +371,36 @@ class Center
     {
         if ($this->channels->removeElement($channel)) {
             $channel->removeCenter($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TextBlock>
+     */
+    public function getTextBlocks(): Collection
+    {
+        return $this->textBlocks;
+    }
+
+    public function addTextBlock(TextBlock $textBlock): self
+    {
+        if (!$this->textBlocks->contains($textBlock)) {
+            $this->textBlocks[] = $textBlock;
+            $textBlock->setCenter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTextBlock(TextBlock $textBlock): self
+    {
+        if ($this->textBlocks->removeElement($textBlock)) {
+            // set the owning side to null (unless already changed)
+            if ($textBlock->getCenter() === $this) {
+                $textBlock->setCenter(null);
+            }
         }
 
         return $this;

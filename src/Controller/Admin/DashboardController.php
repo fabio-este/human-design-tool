@@ -16,6 +16,7 @@ use App\Entity\Bodygraph;
 use App\Entity\CelestialBody;
 use App\Entity\ChannelProperties;
 use App\Entity\Tag;
+use App\Entity\TextBlock;
 use App\Entity\User;
 use App\Repository\BodygraphRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -84,7 +85,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Bodygraphs', 'fa fa-user', Bodygraph::class)
             ->setPermission('ROLE_USER');
-        yield MenuItem::section('Textbausteine');
+        yield MenuItem::section('Entities');
         yield MenuItem::linkToCrud('Himmelskörper',  'fa fa-file-text-o', CelestialBody::class)
             ->setPermission('ROLE_ADMIN');
         yield MenuItem::linkToCrud('Aura Typen', 'fa fa-file-text-o', AuraType::class)
@@ -107,6 +108,9 @@ class DashboardController extends AbstractDashboardController
             ->setPermission('ROLE_USER');
         yield MenuItem::linkToCrud('Inkarnations Kreuze', 'fa fa-file-text-o', IncarnationCross::class)
             ->setPermission('ROLE_USER');
+        yield MenuItem::section('Customize');
+        yield MenuItem::linkToCrud('Textblocks', 'fa fa-pen', TextBlock::class)
+            ->setPermission('ROLE_USER');      
         yield MenuItem::section('Administration')
             ->setPermission('ROLE_USER');
         yield MenuItem::linkToCrud('Tags', 'fa fa-tags', Tag::class)

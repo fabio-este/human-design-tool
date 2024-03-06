@@ -59,12 +59,18 @@ class Channel
      */
     private $properties;
 
+    /**
+     * @ORM\OneToMany(targetEntity=TextBlock::class, mappedBy="channel")
+     */
+    private $textBlocks;
+
     public function __construct()
     {
         $this->gates = new ArrayCollection();
         $this->bodygraphs = new ArrayCollection();
         $this->center = new ArrayCollection();
         $this->properties = new ArrayCollection();
+        $this->textBlocks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -227,6 +233,36 @@ class Channel
     public function removeProperty(ChannelProperties $property): self
     {
         $this->properties->removeElement($property);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TextBlock>
+     */
+    public function getTextBlocks(): Collection
+    {
+        return $this->textBlocks;
+    }
+
+    public function addTextBlock(TextBlock $textBlock): self
+    {
+        if (!$this->textBlocks->contains($textBlock)) {
+            $this->textBlocks[] = $textBlock;
+            $textBlock->setChannel($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTextBlock(TextBlock $textBlock): self
+    {
+        if ($this->textBlocks->removeElement($textBlock)) {
+            // set the owning side to null (unless already changed)
+            if ($textBlock->getChannel() === $this) {
+                $textBlock->setChannel(null);
+            }
+        }
 
         return $this;
     }

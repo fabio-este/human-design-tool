@@ -24,7 +24,7 @@ div#reportDisplay {
     position: relative;
     background: rgba(0, 0, 0, 1);
     border-radius: 0.5rem;
-    padding: 1.5rem 3rem;
+    padding: 1.5rem;
     margin: 3rem auto;
     &::before,
     &::after {
@@ -166,42 +166,5 @@ div#menu {
     filter: blur(50px);
   }
 
-  ul.layer-buttons {
-    padding: 0;
-    margin: 0;
-    display: flex;
-    list-style-type: none;
-    background: #000;
-    border-radius: 0.5rem;
-    li {
-      border-radius: 0.5rem;
-      a {
-        border-radius: 0.5rem;
-        padding: 0.5rem;
-        padding-left: 1rem;
-        padding-right: 1rem;
-        text-decoration: none;
-        background: #000;
-        display: flex;
-        flex-direction: column;
-        img.menu-icon {
-          width: 5rem;
-          height: 5rem;
-          padding: 0;
-        }
-        span {
-          color: #fff;
-          text-decoration: none;
-          padding-top: 0.5rem;
-          text-align: center;
-        }
-      }
-    }
-  }
-  > ul,
-  > div,
-  > div a {
-    z-index: 999;
-    position: relative;
-  }
+  
 }
